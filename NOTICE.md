@@ -384,7 +384,7 @@ THE SOFTWARE.
 ## github.com/andybalholm/brotli/flate
 
 - Version: v1.2.1
-- License: [BSD-3-Clause](https://github.com/andybalholm/brotli/blob/v1.2.1/flate\LICENSE)
+- License: [BSD-3-Clause](https://github.com/andybalholm/brotli/blob/v1.2.1/flate/LICENSE)
 
 ```text
 Copyright (c) 2009 The Go Authors. All rights reserved.
@@ -2787,7 +2787,7 @@ Exhibit B - "Incompatible With Secondary Licenses" Notice
 ## github.com/hashicorp/golang-lru/v2/simplelru
 
 - Version: v2.0.7
-- License: [BSD-3-Clause](https://github.com/hashicorp/golang-lru/blob/v2.0.7/simplelru\LICENSE_list)
+- License: [BSD-3-Clause](https://github.com/hashicorp/golang-lru/blob/v2.0.7/simplelru/LICENSE_list)
 
 ```text
 This license applies to simplelru/list.go
@@ -3138,7 +3138,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 ## github.com/klauspost/compress/internal/snapref
 
 - Version: v1.19.2
-- License: [BSD-3-Clause](https://github.com/klauspost/compress/blob/v1.19.2/internal\snapref\LICENSE)
+- License: [BSD-3-Clause](https://github.com/klauspost/compress/blob/v1.19.2/internal/snapref/LICENSE)
 
 ```text
 Copyright (c) 2011 The Snappy-Go Authors. All rights reserved.
@@ -3174,7 +3174,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ## github.com/klauspost/compress/s2
 
 - Version: v1.19.2
-- License: [BSD-3-Clause](https://github.com/klauspost/compress/blob/v1.19.2/s2\LICENSE)
+- License: [BSD-3-Clause](https://github.com/klauspost/compress/blob/v1.19.2/s2/LICENSE)
 
 ```text
 Copyright (c) 2011 The Snappy-Go Authors. All rights reserved.
@@ -3211,7 +3211,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ## github.com/klauspost/compress/snappy
 
 - Version: v1.19.2
-- License: [BSD-3-Clause](https://github.com/klauspost/compress/blob/v1.19.2/snappy\LICENSE)
+- License: [BSD-3-Clause](https://github.com/klauspost/compress/blob/v1.19.2/snappy/LICENSE)
 
 ```text
 Copyright (c) 2011 The Snappy-Go Authors. All rights reserved.
@@ -3247,7 +3247,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ## github.com/klauspost/compress/zstd/internal/xxhash
 
 - Version: v1.19.2
-- License: [MIT](https://github.com/klauspost/compress/blob/v1.19.2/zstd\internal\xxhash\LICENSE.txt)
+- License: [MIT](https://github.com/klauspost/compress/blob/v1.19.2/zstd/internal/xxhash/LICENSE.txt)
 
 ```text
 Copyright (c) 2016 Caleb Spare

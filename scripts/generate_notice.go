@@ -106,6 +106,9 @@ func parseSections(report string) map[string]string {
 	}
 
 	for _, line := range lines {
+		if strings.HasPrefix(line, "- License: [") {
+			line = strings.ReplaceAll(line, "\\", "/")
+		}
 		if strings.HasPrefix(line, "## ") {
 			flush()
 			currentName = strings.TrimSpace(strings.TrimPrefix(line, "## "))
