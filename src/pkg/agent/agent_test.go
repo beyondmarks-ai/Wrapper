@@ -110,6 +110,25 @@ func TestRemoteSearchOnlyReturnsSharedRoots(t *testing.T) {
 	require.Contains(t, searcher.queries[0], "nopath:nowildcards:\"txt\"")
 }
 
+func TestEncryptedEventLifetimeLeavesClockSkewMargin(t *testing.T) {
+	sourceIdentity, err := remote.NewIdentity()
+	require.NoError(t, err)
+	targetIdentity, err := remote.NewIdentity()
+	require.NoError(t, err)
+	source := deviceFor(t, "source", sourceIdentity)
+	target := deviceFor(t, "target", targetIdentity)
+	cloud := &fakeCloud{devices: []remote.Device{source, target}}
+	instance, err := New(Config{
+		Client: cloud, Identity: sourceIdentity, Device: source, Searcher: fakeSearcher{},
+		DownloadDir: t.TempDir(), CacheDir: t.TempDir(),
+	})
+	require.NoError(t, err)
+	require.NoError(t, instance.refreshDevices(context.Background()))
+	require.NoError(t, instance.sendEncryptedEvent(context.Background(), target.ID, "search.request", remote.SearchRequest{}))
+	require.Len(t, cloud.sent, 1)
+	require.Equal(t, eventTTL, cloud.sent[0].ExpiresAt.Sub(cloud.sent[0].CreatedAt))
+	require.Less(t, eventTTL, 5*time.Minute)
+}
 func TestExplicitSendCanUseUnsharedPathButRemoteRequestCannot(t *testing.T) {
 	sourceIdentity, err := remote.NewIdentity()
 	require.NoError(t, err)

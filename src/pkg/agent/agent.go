@@ -300,7 +300,10 @@ func (a *Agent) handleSearch(ctx context.Context, target string, request remote.
 	return a.sendEncryptedEvent(ctx, target, "search.response", response)
 }
 
-const maxTransferPaths = 100
+const (
+	maxTransferPaths = 100
+	eventTTL         = 4 * time.Minute
+)
 
 func validateTransferPaths(paths []string) error {
 	if len(paths) == 0 {
@@ -481,7 +484,7 @@ func (a *Agent) sendEncryptedEvent(ctx context.Context, target, kind string, val
 	event := remote.Envelope{
 		Version: remote.ProtocolVersion, ID: uuid.NewString(), Kind: kind,
 		SourceDevice: a.config.Device.ID, TargetDevice: target, Ciphertext: ciphertext,
-		CreatedAt: now, ExpiresAt: now.Add(10 * time.Minute),
+		CreatedAt: now, ExpiresAt: now.Add(eventTTL),
 	}
 	if err = a.config.Identity.SignEnvelope(&event); err != nil {
 		return err

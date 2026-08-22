@@ -1,5 +1,5 @@
 #define MyAppName "Wrapper"
-#define MyAppVersion "1.7.0"
+#define MyAppVersion "1.7.1"
 #define MyAppPublisher "Beyond Marks"
 #define MyAppExeName "wrap.exe"
 
