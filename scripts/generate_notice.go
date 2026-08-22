@@ -64,8 +64,8 @@ func main() {
 		fmt.Fprintf(os.Stderr, "read Everything SDK license: %v\n", err)
 		os.Exit(1)
 	}
-	output.WriteString("\n\n## Everything SDK\n\n")
-	output.WriteString("- Component: Everything64.dll\n")
+	output.WriteString("\n\n## Everything SDK and Everything Search 1.4.1.1032\n\n")
+	output.WriteString("- Components: Everything64.dll and the bundled Everything x64 MSI\n")
 	output.WriteString("- Source: https://www.voidtools.com/support/everything/sdk/\n")
 	output.WriteString("- License: https://www.voidtools.com/License.txt\n\n```text\n")
 	output.Write(bytes.TrimSpace(everythingLicense))
