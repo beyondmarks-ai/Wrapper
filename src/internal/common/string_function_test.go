@@ -1,0 +1,325 @@
+package common
+
+import (
+	"bytes"
+	"fmt"
+	"math"
+	"os"
+	"path/filepath"
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+)
+
+func TestStringTruncate(t *testing.T) {
+	var inputs = []struct {
+		function func(string, int, string) string
+		funcName string
+		input    string
+		maxSize  int
+		talis    string
+		expected string
+	}{
+		{TruncateText, "TruncateText", "Hello world", 4, "...", "H..."},
+		{TruncateText, "TruncateText", "Hello world", 6, "...", "Hel..."},
+		{TruncateText, "TruncateText", "Hello", 100, "...", "Hello"},
+		{TruncateTextBeginning, "TruncateTextBeginning", "Hello world", 4, "...", "...d"},
+		{TruncateTextBeginning, "TruncateTextBeginning", "Hello world", 6, "...", "...rld"},
+		{TruncateTextBeginning, "TruncateTextBeginning", "Hello", 100, "...", "Hello"},
+		{TruncateMiddleText, "TruncateMiddleText", "Hello world", 5, "...", "H...d"},
+		{TruncateMiddleText, "TruncateMiddleText", "Hello world", 7, "...", "He...ld"},
+		{TruncateMiddleText, "TruncateMiddleText", "Hello", 100, "...", "Hello"},
+	}
+
+	for _, tt := range inputs {
+		t.Run(fmt.Sprintf("Run %s on string %s to %d chars", tt.funcName, tt.input, tt.maxSize), func(t *testing.T) {
+			result := tt.function(tt.input, tt.maxSize, tt.talis)
+			expected := tt.expected
+			if result != expected {
+				t.Errorf("got \"%s\", expected \"%s\"", result, expected)
+			}
+		})
+	}
+}
+
+func TestFileNameWithoutExtensionText(t *testing.T) {
+	var inputs = []struct {
+		input    string
+		expected string
+	}{
+		{"hello", "hello"},
+		{"hello.zip", "hello"},
+		{"hello.tar.gz", "hello"},
+		{".gitignore", ".gitignore"},
+		{"", ""},
+	}
+
+	for _, tt := range inputs {
+		t.Run(fmt.Sprintf("Remove extension from %s", tt.input), func(t *testing.T) {
+			result := FileNameWithoutExtension(tt.input)
+			if result != tt.expected {
+				t.Errorf("Expected %s, got %s", tt.expected, result)
+			}
+		})
+	}
+}
+
+func TestHelpHotkeyString(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    []string
+		expected string
+	}{
+		{
+			name:     "Single key",
+			input:    []string{"a"},
+			expected: "a",
+		},
+		{
+			name:     "Multiple keys",
+			input:    []string{"a", "b", "c"},
+			expected: "a | b | c",
+		},
+		{
+			name:     "Empty key",
+			input:    []string{"a", "", "b"},
+			expected: "a | b",
+		},
+		{
+			name:     "Trailing empty",
+			input:    []string{"a", ""},
+			expected: "a",
+		},
+		{
+			name:     "Trailing empty with multiple keys",
+			input:    []string{"a", "b", ""},
+			expected: "a | b",
+		},
+		{
+			name:     "Space key",
+			input:    []string{" "},
+			expected: "space",
+		},
+
+		// Starting with an empty key ("", "a") is not allowed by the file parser,
+		// so a test is not needed
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := GetHelpMenuHotkeyString(tt.input)
+			assert.Equal(t, tt.expected, result)
+		})
+	}
+}
+
+func TestIsBufferPrintable(t *testing.T) {
+	var inputs = []struct {
+		input    string
+		atEOF    bool
+		expected bool
+	}{
+		{"", true, true},
+		{"hello", true, true},
+		{"abcdABCD0123~!@#$%^&*()_+-={}|:\"<>?,./;'[]", true, true},
+		{"Horizontal Tab and NewLine\t\t\n\n", true, true},
+		{"\xc2\xa0(UTF-8 NBSP)", true, true},
+		{"\x0b(Vertical Tab)", true, true},
+		{"\x0d(CR)", true, true},
+		{"ASCII control characters : \x00(NULL)", true, false},
+		{"\x05(ENQ)", true, false},
+		{"\x0f(SI)", true, false},
+		{"\x1b(ESC)", true, false},
+		{"\x7f(DEL)", true, false},
+		{"plain ASCII log output", true, true},
+		{"status line \xe2\x9c\x93 example module", true, true},
+		{"box drawing \xe2\x94\x8c\xe2\x94\x80\xe2\x94\x90", true, true},
+		{"\xef\xbf\xbd(UTF-8 replacement character)", true, true},
+		{"\xff(invalid UTF-8 byte)", true, false},
+		{"\xef\xbb\xbfBOM-prefixed text", true, true},
+		{"\xef\xbb\xbf", true, true},
+		{"\xe2\x9c", false, true}, // truncated UTF-8 mid-file (fixed-size read)
+		{"\xe2\x9c", true, false}, // incomplete UTF-8 at true EOF
+		{"hello\xe2\x9c", true, false},
+		{"hello\xe2\x9c", false, true},
+	}
+	for _, tt := range inputs {
+		t.Run(fmt.Sprintf("Testing if buffer %q atEOF=%v is printable", tt.input, tt.atEOF), func(t *testing.T) {
+			result := IsBufferPrintable([]byte(tt.input), tt.atEOF)
+			if result != tt.expected {
+				t.Errorf("Expected %v, got %v", tt.expected, result)
+			}
+		})
+	}
+}
+
+func TestIsTextFile(t *testing.T) {
+	t.Run("UTF-8 log with Unicode early in file", func(t *testing.T) {
+		dir := t.TempDir()
+		path := filepath.Join(dir, "stderr.log")
+		content := "  Loading project at `/path/to/project`\n" +
+			"Building example module...\n" +
+			"    \xe2\x9c\x93 example module\n"
+		require.NoError(t, os.WriteFile(path, []byte(content), 0o644))
+
+		isText, err := IsTextFile(path)
+		require.NoError(t, err)
+		assert.True(t, isText)
+	})
+
+	t.Run("binary with NUL", func(t *testing.T) {
+		dir := t.TempDir()
+		path := filepath.Join(dir, "binary")
+		require.NoError(t, os.WriteFile(path, []byte("hello\x00world"), 0o644))
+
+		isText, err := IsTextFile(path)
+		require.NoError(t, err)
+		assert.False(t, isText)
+	})
+
+	t.Run("BOM-prefixed UTF-8 text", func(t *testing.T) {
+		dir := t.TempDir()
+		path := filepath.Join(dir, "bom.txt")
+		require.NoError(t, os.WriteFile(path, []byte("\xef\xbb\xbfhello\n"), 0o644))
+
+		isText, err := IsTextFile(path)
+		require.NoError(t, err)
+		assert.True(t, isText)
+	})
+
+	t.Run("incomplete UTF-8 at EOF", func(t *testing.T) {
+		dir := t.TempDir()
+		path := filepath.Join(dir, "truncated.log")
+		require.NoError(t, os.WriteFile(path, []byte("hello\xe2\x9c"), 0o644))
+
+		isText, err := IsTextFile(path)
+		require.NoError(t, err)
+		assert.False(t, isText)
+	})
+
+	t.Run("incomplete UTF-8 only at fixed buffer boundary", func(t *testing.T) {
+		dir := t.TempDir()
+		path := filepath.Join(dir, "long.log")
+		// Fill DefaultBufferSize-2 bytes, then start a 3-byte rune so the
+		// first read ends mid-sequence, with more valid UTF-8 after.
+		content := append(bytes.Repeat([]byte("a"), DefaultBufferSize-2), []byte("\xe2\x9c\x93more")...)
+		require.NoError(t, os.WriteFile(path, content, 0o644))
+
+		isText, err := IsTextFile(path)
+		require.NoError(t, err)
+		assert.True(t, isText)
+	})
+}
+
+func TestIsExtensionExtractable(t *testing.T) {
+	inputs := []struct {
+		ext      string
+		expected bool
+	}{
+		{".zip", true},
+		{".rar", true},
+		{".7z", true},
+		{".tar.gz", true},
+		{".tar.bz2", true},
+		{".exe", false},
+		{".txt", false},
+		{".tar", true},
+		{"", false},    // Empty string case
+		{".ZIP", true}, // Case sensitivity check
+		{".Zip", true}, // Case sensitivity check
+		{".bz", true},
+		{".gz", true},
+		{".iso", true},
+	}
+
+	for _, tt := range inputs {
+		t.Run(tt.ext, func(t *testing.T) {
+			result := IsExtensionExtractable(tt.ext)
+			if result != tt.expected {
+				t.Errorf("IsExensionExtractable (%q) = %v; want %v", tt.ext, result, tt.expected)
+			}
+		})
+	}
+}
+
+func TestMakePrintable(t *testing.T) {
+	var inputs = []struct {
+		input    string
+		expected string
+	}{
+		{"", ""},
+		{"hello", "hello"},
+		{"abcdABCD0123~!@#$%^&*()_+-={}|:\"<>?,./;'[]", "abcdABCD0123~!@#$%^&*()_+-={}|:\"<>?,./;'[]"},
+		// tabs go to the next tab stop, not a fixed width
+		{"Horizontal Tab and NewLine\t\t\n\n", "Horizontal Tab and NewLine      \n\n"},
+		{"\tX", "    X"},
+		{"ab\tX", "ab  X"},
+		{"abcd\tX", "abcd    X"},
+		{"a\tb\tc", "a   b   c"},
+		{"a👩‍💻\tX\tY", "a👩‍💻 X   Y"},
+		{"\x1b[1ma\tX\tY\x1b[0m", "\x1b[1ma   X   Y\x1b[0m"},
+		{"abc\n\tX", "abc\n    X"}, // column resets on newline
+		{"(NBSP)\u00a0\u00a0\u00a0\u00a0;", "(NBSP)\u00a0\u00a0\u00a0\u00a0;"},
+		{"\x0b(Vertical Tab)", "(Vertical Tab)"},
+		{"\x0d(CR)", "(CR)"},
+		{"ASCII control characters : \x00(NULL)", "ASCII control characters : (NULL)"},
+		{"\x05(ENQ)", "(ENQ)"},
+		{"\x0f(SI)", "(SI)"},
+		{"\x1b(ESC)", "\x1b(ESC)"},
+		{"\x7f(DEL)", "(DEL)"},
+		{"\x7f(DEL)", "(DEL)"},
+		{"Valid unicodes like nerdfont \uf410 \U000f0868", "Valid unicodes like nerdfont \uf410 \U000f0868"},
+		{"Invalid Unicodes\ufffd", "Invalid Unicodes"},
+		{"Invalid Unicodes\xa0", "Invalid Unicodes"},
+		{"Ascii color sequence\x1b[38;2;230;219;116;48;2;39;40;34m\ue68f \x1b[0m",
+			"Ascii color sequence\x1b[38;2;230;219;116;48;2;39;40;34m\ue68f \x1b[0m"},
+		{"Unicodes spaces\u202f\u205f\u2029", "Unicodes spaces   "},
+		{"IDEOGRAPHIC SPACE\u3000", "IDEOGRAPHIC SPACE "},
+	}
+	for _, tt := range inputs {
+		t.Run(fmt.Sprintf("Make %q printable", tt.input), func(t *testing.T) {
+			result := MakePrintable(tt.input)
+			if result != tt.expected {
+				t.Errorf("Expected '%v', got '%v' (input : '%v')", tt.expected, result, tt.input)
+			}
+		})
+	}
+	t.Run("ESC is skipped", func(t *testing.T) {
+		assert.Equal(t, "(ESC)", MakePrintableWithEscCheck("\x1b(ESC)", false))
+	})
+	t.Run("ESC is not skipped", func(t *testing.T) {
+		assert.Equal(t, "\x1b(ESC)", MakePrintableWithEscCheck("\x1b(ESC)", true))
+	})
+}
+
+func TestFormatSizeInternal(t *testing.T) {
+	t.Run("max int size", func(t *testing.T) {
+		actual := formatSizeInternal(math.MaxInt64, KilobyteSize, unitsDec())
+		assert.Equal(t, "9.22 EB", actual)
+	})
+	t.Run("zero size", func(t *testing.T) {
+		actual := formatSizeInternal(0, KilobyteSize, unitsDec())
+		assert.Equal(t, "0 B", actual)
+	})
+	t.Run("100 bytes size", func(t *testing.T) {
+		actual := formatSizeInternal(100, KilobyteSize, unitsDec())
+		assert.Equal(t, "100 B", actual)
+	})
+	t.Run("1005 bytes size", func(t *testing.T) {
+		actual := formatSizeInternal(1005, KilobyteSize, unitsDec())
+		assert.Equal(t, "1.00 kB", actual)
+	})
+	t.Run("1005 bytes size kibi", func(t *testing.T) {
+		actual := formatSizeInternal(1005, KibibyteSize, unitsBin())
+		assert.Equal(t, "1005 B", actual)
+	})
+	t.Run("1025 bytes size kibi", func(t *testing.T) {
+		actual := formatSizeInternal(1025, KibibyteSize, unitsBin())
+		assert.Equal(t, "1.00 KiB", actual)
+	})
+	t.Run("1035 bytes size kibi", func(t *testing.T) {
+		actual := formatSizeInternal(1035, KibibyteSize, unitsBin())
+		assert.Equal(t, "1.01 KiB", actual)
+	})
+}
