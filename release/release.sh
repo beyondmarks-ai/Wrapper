@@ -1,0 +1,50 @@
+#!/usr/bin/env -S bash -euo pipefail
+
+projectName="wrapper"
+version="v1.6.0"
+osList=("darwin" "linux" "windows")
+archList=("amd64" "arm64")
+
+if [ "$(go env GOHOSTOS)" != "darwin" ]; then
+    echo "release.sh must run on macOS because darwin release builds use CGO." >&2
+    exit 1
+fi
+
+mkdir dist
+
+# Prevent macOS from adding ._* files to archives
+export COPYFILE_DISABLE=1
+
+build_binary() {
+    local os="$1"
+    local arch="$2"
+    local output="$3"
+
+    if [ "$os" = "darwin" ]; then
+        env GOOS="$os" GOARCH="$arch" CGO_ENABLED=1 go build -o "$output" main.go
+    else
+        env GOOS="$os" GOARCH="$arch" CGO_ENABLED=0 go build -o "$output" main.go
+    fi
+}
+
+for os in "${osList[@]}"; do
+    if [ "$os" = "windows" ]; then
+        for arch in "${archList[@]}"; do
+            echo "$projectName-$os-$version-$arch"
+            mkdir "./dist/$projectName-$os-$version-$arch"
+            cd ../ || exit
+            build_binary "$os" "$arch" "./release/dist/$projectName-$os-$version-$arch/wrap.exe"
+            cd ./release || exit
+            zip -r "./dist/$projectName-$os-$version-$arch.zip" "./dist/$projectName-$os-$version-$arch"
+        done
+    else
+        for arch in "${archList[@]}"; do
+            echo "$projectName-$os-$version-$arch"
+            mkdir "./dist/$projectName-$os-$version-$arch"
+            cd ../ || exit
+            build_binary "$os" "$arch" "./release/dist/$projectName-$os-$version-$arch/wrap"
+            cd ./release || exit
+            tar czf "./dist/$projectName-$os-$version-$arch.tar.gz" "./dist/$projectName-$os-$version-$arch"
+        done
+    fi
+done
