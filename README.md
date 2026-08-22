@@ -21,9 +21,12 @@ Wrapper combines terminal file management, instant Everything search, and end-to
 ## Requirements
 
 - Windows 10 or 11 x64.
-- [Everything 1.4](https://www.voidtools.com/downloads/) running with IPC enabled.
-- `Everything64.dll` from the official [Everything SDK](https://www.voidtools.com/support/everything/sdk/) beside `wrap.exe`.
+- The Windows installer includes Everything 1.4, enables its service and startup, and includes `Everything64.dll`. Source builds require the DLL from the official [Everything SDK](https://www.voidtools.com/support/everything/sdk/).
 - A configured Wrapper Cloud deployment for cross-PC features. Local file management and search do not require cloud access.
+
+## Install
+
+Run `Wrapper-Setup-x64.exe` once as administrator. It installs Wrapper, the signed Everything indexer, its automatic service, and the background components required for cross-PC search. No separate dependency installation is needed.
 
 ## Build
 
@@ -34,7 +37,7 @@ cd Wrapper
 .\bin\wrap.exe
 ```
 
-The build script tests the repository and produces both `bin/wrap.exe` and `bin/wrapper-agent.exe`. To make an installer:
+The build script tests the repository and produces both `bin/wrap.exe` and `bin/wrapper-agent.exe`. To make the all-in-one installer, which downloads and checksum-verifies the pinned official Everything MSI:
 
 ```powershell
 winget install JRSoftware.InnoSetup

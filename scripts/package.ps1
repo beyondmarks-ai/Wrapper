@@ -9,6 +9,32 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $root = Split-Path -Parent $PSScriptRoot
+$EverythingInstallerVersion = '1.4.1.1032'
+$EverythingInstallerSha256 = '4e7a80885aab8566b750c56a2a2b3e7c3c1f4920bcc53777e07f5eeb9e1f7485'
+$prerequisiteDirectory = Join-Path $root 'installer\prerequisites'
+$everythingInstaller = Join-Path $prerequisiteDirectory "Everything-$EverythingInstallerVersion.x64.msi"
+$everythingInstallerUrl = "https://www.voidtools.com/Everything-$EverythingInstallerVersion.x64.msi"
+New-Item -ItemType Directory -Path $prerequisiteDirectory -Force | Out-Null
+
+$installerReady = Test-Path -LiteralPath $everythingInstaller -PathType Leaf
+if ($installerReady) {
+    $installerReady = (Get-FileHash -LiteralPath $everythingInstaller -Algorithm SHA256).Hash.ToLowerInvariant() -eq
+        $EverythingInstallerSha256.ToLowerInvariant()
+}
+if (-not $installerReady) {
+    $download = "$everythingInstaller.download"
+    try {
+        Invoke-WebRequest -UseBasicParsing -Uri $everythingInstallerUrl -OutFile $download
+        $actualHash = (Get-FileHash -LiteralPath $download -Algorithm SHA256).Hash.ToLowerInvariant()
+        if ($actualHash -ne $EverythingInstallerSha256.ToLowerInvariant()) {
+            throw "Everything installer checksum mismatch: $actualHash"
+        }
+        Move-Item -LiteralPath $download -Destination $everythingInstaller -Force
+    } finally {
+        Remove-Item -LiteralPath $download -Force -ErrorAction SilentlyContinue
+    }
+}
+
 & (Join-Path $PSScriptRoot 'build.ps1') -EverythingDll $EverythingDll -CloudApiUrl $CloudApiUrl -GoogleClientId $GoogleClientId -FirebaseApiKey $FirebaseApiKey -CertificateThumbprint $CertificateThumbprint
 
 $iscc = (Get-Command ISCC.exe -ErrorAction SilentlyContinue).Source

@@ -5455,9 +5455,9 @@ limitations under the License.
 
 ```
 
-## Everything SDK
+## Everything SDK and Everything Search 1.4.1.1032
 
-- Component: Everything64.dll
+- Components: Everything64.dll and the bundled Everything x64 MSI
 - Source: https://www.voidtools.com/support/everything/sdk/
 - License: https://www.voidtools.com/License.txt
 

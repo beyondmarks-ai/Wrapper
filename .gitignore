@@ -1,6 +1,7 @@
 *.log
 bin/
 dist/
+installer/prerequisites/*.msi
 .idea/
 
 # generated types
