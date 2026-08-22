@@ -1,0 +1,10 @@
+{
+  "auth": {
+    "providers": {
+      "googleSignIn": {
+        "oAuthBrandDisplayName": "Wrapper",
+        "supportEmail": "its.rakeshkumar.dev@gmail.com"
+      }
+    }
+  }
+}

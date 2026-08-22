@@ -1,0 +1,11 @@
+project_id         = "your-firebase-project-id"
+region             = "us-central1"
+firestore_location = "nam5"
+github_repository   = "beyondmarks-ai/Wrapper"
+
+# Set this only when you want Terraform to create a billing budget.
+# billing_account    = "000000-000000-000000"
+# monthly_budget_amount = 25
+
+# Keep the hello image for the first apply. CI deploys Wrapper afterward.
+# container_image = "us-docker.pkg.dev/cloudrun/container/hello@sha256:9a0e9a5c7a19281e7617991d2fc61809de4973e6e75a10b2f07df3719ffda33c"
