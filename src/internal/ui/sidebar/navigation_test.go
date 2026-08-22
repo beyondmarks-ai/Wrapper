@@ -1,0 +1,488 @@
+package sidebar
+
+import (
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+
+	"github.com/beyondmarks-ai/Wrapper/src/internal/common"
+)
+
+func Test_lastRenderIndex(t *testing.T) {
+	// Setup test data
+	sidebarA := defaultTestModel(0, 0, 0, 10, 10, 10)
+	sidebarB := defaultTestModel(0, 0, 0, 1, 0, 5)
+
+	testCases := []struct {
+		name              string
+		sidebar           Model
+		mainPanelHeight   int
+		startIndex        int
+		expectedLastIndex int
+		explanation       string
+	}{
+		{
+			name:              "Small viewport with home directories",
+			sidebar:           sidebarA,
+			mainPanelHeight:   10,
+			startIndex:        0,
+			expectedLastIndex: 6,
+			explanation:       "3(initialHeight) + 7 (0-6 home dirs)",
+		},
+		{
+			name:              "Medium viewport showing home and some pinned",
+			sidebar:           sidebarA,
+			mainPanelHeight:   20,
+			startIndex:        0,
+			expectedLastIndex: 14,
+			explanation:       "3(initialHeight) + 10 (0-9 home dirs) + 3 (10-pinned divider) + 4 (11-14 pinned dirs)",
+		},
+		{
+			name:              "Medium viewport starting from pinned dirs",
+			sidebar:           sidebarA,
+			mainPanelHeight:   20,
+			startIndex:        11,
+			expectedLastIndex: 25,
+			explanation:       "3(initialHeight) + 10 (11-20 pinned dirs) + 3 (21-disk divider) + 4 (22-25 disk dirs)",
+		},
+		{
+			name:              "Large viewport showing all directories",
+			sidebar:           sidebarA,
+			mainPanelHeight:   100,
+			startIndex:        11,
+			expectedLastIndex: 31,
+			explanation:       "Last dir index is 31",
+		},
+		{
+			name:              "Start index beyond directory count",
+			sidebar:           sidebarA,
+			mainPanelHeight:   100,
+			startIndex:        32,
+			expectedLastIndex: 31,
+			explanation:       "When startIndex > len(directories), return last valid index",
+		},
+		{
+			name:              "Asymmetric directory distribution",
+			sidebar:           sidebarB,
+			mainPanelHeight:   12,
+			startIndex:        0,
+			expectedLastIndex: 6,
+			explanation:       "3(initialHeight) + 1 (0-homedir) + 3(1-diskdivider) + 5 (2-6 diskdirs)",
+		},
+	}
+
+	for _, tt := range testCases {
+		t.Run(tt.name, func(t *testing.T) {
+			tt.sidebar.SetHeight(tt.mainPanelHeight + common.BorderPadding)
+
+			result := tt.sidebar.lastRenderedIndex(tt.startIndex)
+			assert.Equal(t, tt.expectedLastIndex, result,
+				"lastRenderedIndex failed: %s", tt.explanation)
+		})
+	}
+}
+
+func Test_firstRenderIndex(t *testing.T) {
+	sidebarA := defaultTestModel(0, 0, 0, 10, 10, 10)
+	sidebarB := defaultTestModel(0, 0, 0, 1, 0, 5)
+	sidebarC := defaultTestModel(0, 0, 0, 0, 5, 5)
+	sidebarD := defaultTestModel(0, 0, 0, 0, 0, 3)
+
+	// Empty sidebar with only dividers
+	sidebarE := defaultTestModel(0, 0, 0, 0, 0, 0)
+
+	testCases := []struct {
+		name               string
+		sidebar            Model
+		mainPanelHeight    int
+		endIndex           int
+		expectedFirstIndex int
+		explanation        string
+	}{
+		{
+			name:               "Basic calculation from end index",
+			sidebar:            sidebarA,
+			mainPanelHeight:    10,
+			endIndex:           10,
+			expectedFirstIndex: 6,
+			explanation:        "3(InitialHeight) + 4 (6-9 homedirs) + 3 (10-pinned divider)",
+		},
+		{
+			name:               "Small panel height",
+			sidebar:            sidebarA,
+			mainPanelHeight:    5,
+			endIndex:           15,
+			expectedFirstIndex: 14,
+			explanation:        "3(InitialHeight) + 2(14-15 pinned dirs)",
+		},
+		{
+			name:               "End index near beginning",
+			sidebar:            sidebarA,
+			mainPanelHeight:    20,
+			endIndex:           3,
+			expectedFirstIndex: 0,
+			explanation:        "When end index is near beginning, first index should be 0",
+		},
+		{
+			name:               "End index at disk divider",
+			sidebar:            sidebarA,
+			mainPanelHeight:    15,
+			endIndex:           21, // Disk divider in sidebar_a
+			expectedFirstIndex: 12,
+			explanation:        "3(InitialHeight) + 9(12-20 pinned dirs) + 3(21-disk divider)",
+		},
+		{
+			name:               "Very large panel height showing all items",
+			sidebar:            sidebarA,
+			mainPanelHeight:    100,
+			endIndex:           31, // Last disk dir in sidebar_a
+			expectedFirstIndex: 0,
+			explanation:        "Large panel should show all directories from start",
+		},
+		{
+			name:               "Asymetric sidebar with few directories",
+			sidebar:            sidebarB,
+			mainPanelHeight:    12,
+			endIndex:           4, // Last disk dir in sidebar_b
+			expectedFirstIndex: 0,
+			explanation:        "Small sidebar should fit in panel height",
+		},
+		{
+			name:               "No home directories case",
+			sidebar:            sidebarC,
+			mainPanelHeight:    10,
+			endIndex:           6, // Disk dir in sidebar_c
+			expectedFirstIndex: 2, // Pinned divider
+			explanation:        "3(InitialHeight) + 4(2-5 pinned dirs) + 3(6-disk divider)",
+		},
+		{
+			name:               "Only disk directories case",
+			sidebar:            sidebarD,
+			mainPanelHeight:    8,
+			endIndex:           2, // Last disk dir
+			expectedFirstIndex: 0, // First disk dir
+			explanation:        "3(InitialHeight) + 3(0-2 disk dirs)",
+		},
+		{
+			name:               "Empty sidebar case",
+			sidebar:            sidebarE,
+			mainPanelHeight:    10,
+			endIndex:           2,
+			expectedFirstIndex: 3,
+			explanation:        "An entirely empty sidebar produces no dividers (empty directories slice), so firstRenderedIndex(2) treats endIndex=2 as out of bounds and returns endIndex+1",
+		},
+		{
+			name:               "End index at the start",
+			sidebar:            sidebarA,
+			mainPanelHeight:    5,
+			endIndex:           0,
+			expectedFirstIndex: 0,
+			explanation:        "When end index is at start, first index should be the same",
+		},
+		{
+			name:               "End index out of bounds",
+			sidebar:            sidebarA,
+			mainPanelHeight:    20,
+			endIndex:           32, // Out of bounds for sidebar_a
+			expectedFirstIndex: 33, // endIndex + 1
+			explanation:        "When end index is out of bounds, should return endIndex+1",
+		},
+		{
+			name:               "Very small panel height",
+			sidebar:            sidebarA,
+			mainPanelHeight:    2, // Too small to fit anything
+			endIndex:           10,
+			expectedFirstIndex: 11,
+			explanation:        "With panel height less than initialHeight, first index is invalid",
+		},
+		{
+			name:               "Panel height exactly matches divider",
+			sidebar:            sidebarA,
+			mainPanelHeight:    6,  // Just enough for initialHeight + divider
+			endIndex:           10, // Pinned divider
+			expectedFirstIndex: 10,
+			explanation:        "When panel height only fits the divider, start index should be the same",
+		},
+		{
+			name:               "Boundary case between directory types",
+			sidebar:            sidebarA,
+			mainPanelHeight:    7,
+			endIndex:           11, // First pinned dir
+			expectedFirstIndex: 10, // Pinned divider
+			explanation:        "3(InitialHeight) + 3(10-pinned divider) + 1(11-pinned dir)",
+		},
+	}
+
+	for _, tt := range testCases {
+		t.Run(tt.name, func(t *testing.T) {
+			tt.sidebar.SetHeight(tt.mainPanelHeight + common.BorderPadding)
+			result := tt.sidebar.firstRenderedIndex(tt.endIndex)
+			assert.Equal(t, tt.expectedFirstIndex, result,
+				"firstRenderedIndex failed: %s", tt.explanation)
+		})
+	}
+}
+
+func Test_updateRenderIndex(t *testing.T) {
+	testCases := []struct {
+		name                string
+		sidebar             Model
+		mainPanelHeight     int
+		initialRenderIndex  int
+		initialCursor       int
+		expectedRenderIndex int
+		explanation         string
+	}{
+		{
+			name:                "Case I: Cursor moved above render range",
+			sidebar:             defaultTestModel(5, 10, 0, 10, 10, 10),
+			mainPanelHeight:     15,
+			expectedRenderIndex: 5,
+			explanation:         "When cursor moves above render range, renderIndex should be set to cursor",
+		},
+		{
+			name:                "Case II: Cursor within render range",
+			sidebar:             defaultTestModel(8, 5, 0, 10, 10, 10),
+			mainPanelHeight:     15,
+			expectedRenderIndex: 5, // No change expected
+			explanation:         "When cursor is within render range, renderIndex should not change",
+		},
+		{
+			name:                "Case III: Cursor moved below render range",
+			sidebar:             defaultTestModel(20, 0, 0, 10, 10, 10),
+			mainPanelHeight:     10,
+			expectedRenderIndex: 14, // Should adjust to make cursor visible
+			// 3(Initial height) + 7(14-20 pinned dirs)
+			explanation: "When cursor moves below render range, renderIndex should adjust to make cursor visible",
+		},
+		{
+			name:                "Edge case: Small panel with cursor at end",
+			sidebar:             defaultTestModel(31, 0, 0, 10, 10, 10),
+			mainPanelHeight:     5,
+			expectedRenderIndex: 30, // Should show only the last couple items
+			explanation:         "With small panel and cursor at end, should adjust renderIndex to show cursor",
+		},
+		{
+			name:                "Edge case: Large panel showing everything",
+			sidebar:             defaultTestModel(4, 2, 0, 1, 0, 5),
+			mainPanelHeight:     50, // Large enough to show all directories
+			expectedRenderIndex: 2,  // No change needed as everything is visible
+			explanation:         "With large panel showing all items, renderIndex should remain unchanged",
+		},
+		{
+			name:                "Edge case: Empty sidebar",
+			sidebar:             defaultTestModel(0, 0, 0, 0, 0, 0),
+			mainPanelHeight:     10,
+			expectedRenderIndex: 0,
+			explanation:         "With empty sidebar, renderIndex should remain at 0",
+		},
+		{
+			name:                "Case I and III overlap: Cursor exactly at current renderIndex",
+			sidebar:             defaultTestModel(15, 15, 0, 10, 10, 10),
+			mainPanelHeight:     10,
+			expectedRenderIndex: 15, // No change needed, Case I takes precedence
+			explanation: "When cursor is exactly at renderIndex, " +
+				"Case I takes precedence and renderIndex remains unchanged",
+		},
+		{
+			name:                "Boundary case: Cursor at edge of visible range",
+			sidebar:             defaultTestModel(9, 5, 0, 10, 10, 10),
+			mainPanelHeight:     8,
+			expectedRenderIndex: 5, // Still visible, no change needed
+			explanation:         "When cursor is at the edge of visible range, renderIndex should not change",
+		},
+		{
+			name:                "Boundary case: Cursor just beyond visible range",
+			sidebar:             defaultTestModel(11, 5, 0, 10, 10, 10),
+			mainPanelHeight:     10,
+			expectedRenderIndex: 7, // Adjust to make cursor visible
+			explanation:         "When cursor is just beyond visible range, renderIndex should adjust",
+		},
+	}
+
+	for _, tt := range testCases {
+		t.Run(tt.name, func(t *testing.T) {
+			// Create a copy of the sidebar to avoid modifying the original
+			sidebar := tt.sidebar
+			sidebar.SetHeight(tt.mainPanelHeight + common.BorderPadding)
+
+			// Update render index
+			sidebar.updateRenderIndex()
+
+			// Check the result
+			assert.Equal(t, tt.expectedRenderIndex, sidebar.renderIndex,
+				"updateRenderIndex failed: %s", tt.explanation)
+		})
+	}
+}
+
+func Test_listUp(t *testing.T) {
+	testCases := []struct {
+		name                string
+		sidebar             Model
+		mainPanelHeight     int
+		expectedCursor      int
+		expectedRenderIndex int
+		explanation         string
+	}{
+		{
+			name:                "Basic cursor movement from middle position",
+			sidebar:             defaultTestModel(5, 5, 0, 10, 10, 10),
+			mainPanelHeight:     15,
+			expectedCursor:      4, // Should move up one position
+			expectedRenderIndex: 4, // Render index should follow cursor
+			explanation:         "When cursor is in the middle, it should move up one position",
+		},
+		{
+			name:                "Skip divider when moving up",
+			sidebar:             defaultTestModel(11, 8, 0, 10, 10, 10),
+			mainPanelHeight:     10,
+			expectedCursor:      9, // Should skip divider (10) and move to home dir (9)
+			expectedRenderIndex: 8,
+			explanation:         "When moving up to a divider, cursor should skip it and move to previous item",
+		},
+		{
+			name:                "Wrap around from top to bottom",
+			sidebar:             defaultTestModel(0, 0, 0, 10, 10, 10),
+			mainPanelHeight:     10,
+			expectedCursor:      31, // Should wrap to last directory (index 31)
+			expectedRenderIndex: 25, // Should adjust render to show cursor
+			// 3(Initial Height) + 7(25-31 disk dirs)
+			explanation: "When at the top, cursor should wrap to the bottom",
+		},
+		{
+			name:                "Move up within disk section",
+			sidebar:             defaultTestModel(7, 5, 0, 5, 0, 5),
+			mainPanelHeight:     10,
+			expectedCursor:      6, // Should skip all dividers and move to item before dividers
+			expectedRenderIndex: 5, // Should adjust render index accordingly
+			explanation:         "When moving up from cursor 7, lands on the previous disk directory (expectedCursor = 6)",
+		},
+		{
+			name:                "No actual directories case",
+			sidebar:             defaultTestModel(0, 0, 0, 0, 0, 0),
+			mainPanelHeight:     10,
+			expectedCursor:      0, // Should remain unchanged
+			expectedRenderIndex: 0, // Should remain unchanged
+			explanation:         "When there are no actual directories, cursor should not move",
+		},
+		{
+			name:                "Large panel showing all directories",
+			sidebar:             defaultTestModel(3, 0, 0, 2, 2, 2),
+			mainPanelHeight:     50, // Large enough to show all directories
+			expectedCursor:      1,  // Should move up one position
+			expectedRenderIndex: 0,  // No change needed as everything is visible
+			explanation:         "With large panel showing all items, cursor should move up and renderIndex remain unchanged",
+		},
+	}
+
+	for _, tt := range testCases {
+		t.Run(tt.name, func(t *testing.T) {
+			// Create a copy of the sidebar to avoid modifying the original
+			sidebar := tt.sidebar
+			sidebar.SetHeight(tt.mainPanelHeight + common.BorderPadding)
+
+			// Call the function to test
+			sidebar.ListUp()
+
+			// Check the results
+			assert.Equal(t, tt.expectedCursor, sidebar.cursor,
+				"listUp cursor position: %s", tt.explanation)
+			assert.Equal(t, tt.expectedRenderIndex, sidebar.renderIndex,
+				"listUp render index: %s", tt.explanation)
+		})
+	}
+}
+
+func Test_listDown(t *testing.T) {
+	testCases := []struct {
+		name                string
+		sidebar             Model
+		mainPanelHeight     int
+		expectedCursor      int
+		expectedRenderIndex int
+		explanation         string
+	}{
+		{
+			name:                "Basic cursor movement from middle position",
+			sidebar:             defaultTestModel(5, 5, 0, 10, 10, 10),
+			mainPanelHeight:     15,
+			expectedCursor:      6, // Should move down one position
+			expectedRenderIndex: 5, // Render index should remain the same as cursor is still visible
+			explanation:         "When cursor is in the middle, it should move down one position",
+		},
+		{
+			name:                "Skip divider when moving down",
+			sidebar:             defaultTestModel(9, 8, 0, 10, 10, 10),
+			mainPanelHeight:     10,
+			expectedCursor:      11, // Should skip divider (10) and move to pinned dir (11)
+			expectedRenderIndex: 8,  // Should adjust render index to keep cursor visible
+			explanation:         "When moving down to a divider, cursor should skip it and move to next item",
+		},
+		{
+			name:                "Wrap around from bottom to top",
+			sidebar:             defaultTestModel(31, 26, 0, 10, 10, 10),
+			mainPanelHeight:     10,
+			expectedCursor:      0, // Should wrap to first directory (index 0)
+			expectedRenderIndex: 0, // Should adjust render to show cursor
+			explanation:         "When at the bottom, cursor should wrap to the top",
+		},
+		{
+			name:                "Skip multiple consecutive dividers",
+			sidebar:             defaultTestModel(4, 0, 0, 5, 0, 5),
+			mainPanelHeight:     10,
+			expectedCursor:      6, // Should skip all dividers and move to item after dividers
+			expectedRenderIndex: 2, // Should adjust render index accordingly
+			explanation:         "When moving down across a divider, cursor should skip it and land on the first disk directory",
+		},
+		{
+			name:                "No actual directories case",
+			sidebar:             defaultTestModel(0, 0, 0, 0, 0, 0),
+			mainPanelHeight:     10,
+			expectedCursor:      0, // Should remain unchanged
+			expectedRenderIndex: 0, // Should remain unchanged
+			explanation:         "When there are no actual directories, cursor should not move",
+		},
+		{
+			name:                "Move down from home to pinned section",
+			sidebar:             defaultTestModel(9, 6, 0, 10, 10, 10),
+			mainPanelHeight:     10,
+			expectedCursor:      11, // Should move to first pinned directory
+			expectedRenderIndex: 7,  // Should adjust render index to show cursor
+			explanation: "When moving down from last home directory," +
+				" cursor should skip divider and go to first pinned directory",
+		},
+		{
+			name:                "Large panel showing all directories",
+			sidebar:             defaultTestModel(3, 0, 0, 2, 2, 2),
+			mainPanelHeight:     50, // Large enough to show all directories
+			expectedCursor:      4,  // Should move down one position
+			expectedRenderIndex: 0,  // No change needed as everything is visible
+			explanation:         "With large panel showing all items, cursor should move down and renderIndex remain unchanged",
+		},
+		{
+			name:                "Cursor at the end of visible range",
+			sidebar:             defaultTestModel(14, 5, 0, 10, 10, 10),
+			mainPanelHeight:     15,
+			expectedCursor:      15, // Should move down one position
+			expectedRenderIndex: 6,  // Should increase render index to keep cursor visible
+			explanation:         "When cursor is at the end of visible range, moving down should adjust renderIndex",
+		},
+	}
+
+	for _, tt := range testCases {
+		t.Run(tt.name, func(t *testing.T) {
+			// Create a copy of the sidebar to avoid modifying the original
+			sidebar := tt.sidebar
+			sidebar.SetHeight(tt.mainPanelHeight + common.BorderPadding)
+			// Call the function to test
+			sidebar.ListDown()
+
+			// Check the results
+			assert.Equal(t, tt.expectedCursor, sidebar.cursor,
+				"listDown cursor position: %s", tt.explanation)
+			assert.Equal(t, tt.expectedRenderIndex, sidebar.renderIndex,
+				"listDown render index: %s", tt.explanation)
+		})
+	}
+}

@@ -1,0 +1,80 @@
+package prompt
+
+import "time"
+
+// These could as well be property of prompt Model vs being global consts
+// But its fine
+const (
+	promptHeadlineText = "wrapper Prompt"
+
+	OpenCommand  = "open"
+	SplitCommand = "split"
+	CdCommand    = "cd"
+
+	// We could later make this configurable. But, not needed now.
+	wrapPromptChar  = ">"
+	shellPromptChar = ":"
+
+	successMessagePrefix = "Success"
+	failureMessagePrefix = "Error"
+
+	shellModeString = "(Shell Mode)"
+	wrapModeString  = "(WRAP Mode)"
+
+	// Error message string
+	tokenizationError    = "Failed during tokenization"
+	splitCommandArgError = "split command should not be given arguments"
+
+	// Timeout for command executed for shell substitution
+	shellSubTimeout        = 1000 * time.Millisecond
+	shellSubTimeoutInTests = 100 * time.Millisecond
+
+	defaultTestCwd = "/"
+
+	PromptMinWidth  = 10
+	PromptMinHeight = 3
+
+	defaultTestWidth     = 100
+	defaultTestMaxHeight = 100
+
+	// UI dimension constants for prompt modal
+	// promptInputPadding is total padding for prompt input fields
+	promptInputPadding = 6 // 2 + 1 + 2 + 1 (borders and spacing)
+
+	// expectedArgCount is the expected number of prompt arguments
+	expectedArgCount = 2
+)
+
+func modeString(shellMode bool) string {
+	if shellMode {
+		return shellModeString
+	}
+	return wrapModeString
+}
+
+func shellPrompt(shellMode bool) string {
+	if shellMode {
+		return shellPromptChar
+	}
+	return wrapPromptChar
+}
+
+func defaultCommandSlice() []promptCommand {
+	return []promptCommand{
+		{
+			command:     OpenCommand,
+			usage:       OpenCommand + " <PATH>",
+			description: "Open a new panel at a specified path",
+		},
+		{
+			command:     SplitCommand,
+			usage:       SplitCommand,
+			description: "Open a new panel at the current file panel's path",
+		},
+		{
+			command:     CdCommand,
+			usage:       CdCommand + " <PATH>",
+			description: "Change directory of current panel",
+		},
+	}
+}

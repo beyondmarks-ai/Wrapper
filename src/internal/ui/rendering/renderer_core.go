@@ -1,0 +1,161 @@
+package rendering
+
+import (
+	"log/slog"
+	"strings"
+
+	"charm.land/lipgloss/v2"
+	"github.com/charmbracelet/x/ansi"
+)
+
+// Add lines as much as the remaining capacity allows
+func (r *Renderer) AddLines(lines ...string) *Renderer {
+	r.contentSections[r.curSectionIdx].AddLines(lines...)
+	return r
+}
+
+// Lines until now will belong to current section, and
+// Any new lines will belong to a new section
+func (r *Renderer) AddSection() {
+	// r.committedContentHeight before this point only includes sections
+	// before r.curSectionIdx
+
+	// Silently Fail if cannot add
+	if r.contentHeight <= r.committedContentHeight+r.contentSections[r.curSectionIdx].CntLines() {
+		slog.Error("Cannot add any more sections", "name", r.name, "committedHeight", r.committedContentHeight,
+			"contentHeight", r.contentHeight)
+		return
+	}
+	r.committedContentHeight += r.contentSections[r.curSectionIdx].CntLines()
+
+	// Add divider
+	r.border.AddDivider(r.committedContentHeight)
+	// sectionDivider should be of borderstyle
+	r.sectionDividers = append(r.sectionDividers, lipgloss.NewStyle().
+		Foreground(r.borderFGColor).
+		Background(r.borderBGColor).
+		Render(strings.Repeat(r.borderStrings.Top, r.contentWidth)))
+	r.committedContentHeight++
+
+	remainingHeight := r.contentHeight - r.committedContentHeight
+	r.contentSections = append(r.contentSections,
+		NewContentRenderer(remainingHeight, r.contentWidth, r.defTruncateStyle, r.name))
+	// Adjust index
+	r.curSectionIdx++
+}
+
+// Truncate would always preserve ansi codes.
+func (r *Renderer) AddLineWithCustomTruncate(line string, truncateStyle TruncateStyle) {
+	r.contentSections[r.curSectionIdx].AddLineWithCustomTruncate(line, truncateStyle)
+}
+
+func (r *Renderer) AddStyleModifier(modifier StyleModifier) *Renderer {
+	r.styleModifiers = append(r.styleModifiers, modifier)
+	return r
+}
+
+func (r *Renderer) SetBorderTitle(title string) {
+	r.border.SetTitle(title)
+}
+
+func (r *Renderer) SetBorderInfoItems(infoItems ...string) {
+	r.border.SetInfoItems(infoItems...)
+}
+
+func (r *Renderer) AreInfoItemsTruncated() bool {
+	return r.border.AreInfoItemsTruncated()
+}
+
+func (r *Renderer) actualContentHeight() int {
+	return r.committedContentHeight + r.contentSections[r.curSectionIdx].CntLines()
+}
+
+// Should not do any updates on 'r'
+func (r *Renderer) Render() string {
+	content := strings.Builder{}
+	for i := range r.contentSections {
+		// After every iteration, current cursor will be on next newline
+		curContent := r.contentSections[i].Render()
+		content.WriteString(curContent)
+		// == "" check cant differentiate between no data, vs empty line
+		if r.contentSections[i].CntLines() > 0 {
+			content.WriteString("\n")
+		}
+
+		if i < len(r.contentSections)-1 {
+			// True for all except last section
+			content.WriteString(r.sectionDividers[i])
+			content.WriteString("\n")
+		}
+	}
+	contentStr := strings.TrimSuffix(content.String(), "\n")
+	res := r.Style().Render(contentStr)
+	// Post rendering validations - Maybe we can return an error instead of logging
+	// TODO(perf): This can be disabled to improve performance
+	maxW := 0
+	for line := range strings.Lines(res) {
+		maxW = max(maxW, ansi.StringWidth(line))
+	}
+
+	lineCnt := strings.Count(res, "\n") + 1
+	if maxW > r.totalWidth || lineCnt > r.totalHeight {
+		slog.Error(
+			"Rendered output data inconsistency",
+			"name",
+			r.name,
+			"lineCnt",
+			lineCnt,
+			"totalHeight",
+			r.totalHeight,
+			"totalWidth",
+			r.totalWidth,
+			"maxW",
+			maxW,
+		)
+		// lipgloss Render() doesn't always respects the "height" value,
+		// so res can have more height than intended. In that case, we must truncate lines here.
+		newRes := strings.Builder{}
+		curCnt := 0
+		// Dont use strings.Lines(), that wont allow us to have empty lines
+		for line := range strings.SplitSeq(res, "\n") {
+			if curCnt == r.totalHeight {
+				break
+			}
+			newRes.WriteString(ansi.Truncate(line, r.totalWidth, ""))
+			curCnt++
+			if curCnt < r.totalHeight {
+				newRes.WriteByte('\n')
+			}
+		}
+		return newRes.String()
+	}
+
+	return res
+}
+
+func (r *Renderer) Style() lipgloss.Style {
+	height := r.totalHeight
+	if r.truncateHeight {
+		height = r.actualContentHeight()
+		if r.borderRequired {
+			height += 2
+		}
+	}
+	s := lipgloss.NewStyle()
+
+	for _, modifier := range r.styleModifiers {
+		s = modifier(s)
+	}
+
+	s = s.Width(r.totalWidth).
+		Height(height).
+		Background(r.contentBGColor).
+		Foreground(r.contentFGColor)
+
+	if r.borderRequired {
+		s = s.Border(r.border.GetBorder(r.borderStrings))
+		s = s.BorderForeground(r.borderFGColor).
+			BorderBackground(r.borderBGColor)
+	}
+	return s
+}
