@@ -1,0 +1,12 @@
+[Desktop Entry]
+Name=wrap
+GenericName=wrapper
+Comment=fancy and modern terminal file manager
+Type=Application
+MimeType=inode/directory
+Icon=wrap
+Terminal=true
+TryExec=wrap
+Exec=wrap %u
+Categories=Utility;System;FileTools;FileManager;Filesystem;ConsoleOnly
+Keywords=File;Manager;Explorer
