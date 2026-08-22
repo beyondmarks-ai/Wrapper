@@ -1,0 +1,709 @@
+---
+title: CHANGELOG
+description: New features, improvements, and bug fixes for the wrapper.
+head:
+  - tag: title
+    content: wrapper ChangeLog | wrapper
+---
+
+# ChangeLog
+
+All notable changes to this project will be documented in this file. Dates are displayed in UTC(YYYY-MM-DD).
+
+# [**v1.6.0**](https://github.com/beyondmarks-ai/Wrapper/releases/tag/v1.6.0)
+
+> 2026-06-08
+
+#### Update
+
+- Add configuration options for sidebar section visibility and ordering [`#1323`](https://github.com/beyondmarks-ai/Wrapper/pull/1323)
+- Add binary architecture detection for ELF, PE, and Mach-O [`#1328`](https://github.com/beyondmarks-ai/Wrapper/pull/1328)
+- Add --debug-info flag [`#1332`](https://github.com/beyondmarks-ai/Wrapper/pull/1332)
+- Focus on current directory on navigation to parent directory in a filepanel [`#1340`](https://github.com/beyondmarks-ai/Wrapper/pull/1340)
+- Add split_file_panel key function [`#1344`](https://github.com/beyondmarks-ai/Wrapper/pull/1344)
+- Refresh file metadata when focusing metadata panel [`#1372`](https://github.com/beyondmarks-ai/Wrapper/pull/1372)
+- Add Desktop directory to well-known directories [`#1386`](https://github.com/beyondmarks-ai/Wrapper/pull/1386)
+- Add support for Postscript files [`#1399`](https://github.com/beyondmarks-ai/Wrapper/pull/1399)
+- Bubbletea v2 migration [`#1406`](https://github.com/beyondmarks-ai/Wrapper/pull/1406)
+- Detailed information about delete operation errors for the user [`#1408`](https://github.com/beyondmarks-ai/Wrapper/pull/1408)
+- Add file type byte to permissions column [`#1410`](https://github.com/beyondmarks-ai/Wrapper/pull/1410)
+- New website & logo design [`#1423`](https://github.com/beyondmarks-ai/Wrapper/pull/1423)
+- Add Linux attributes to metadata [`#1432`](https://github.com/beyondmarks-ai/Wrapper/pull/1432)
+- More informative content of the error text for file text preview [`#1436`](https://github.com/beyondmarks-ai/Wrapper/pull/1436)
+
+#### Bug Fix
+
+- Resolve Nix build failure [`#1298`](https://github.com/beyondmarks-ai/Wrapper/pull/1298)
+- Prune Inaccessible Items from clipboard before pasting [`#1300`](https://github.com/beyondmarks-ai/Wrapper/pull/1300)
+- Correct jump back to parent directories cursor position [`#1316`](https://github.com/beyondmarks-ai/Wrapper/pull/1316)
+- Move toggleDot files to fileModel and force re render on toggle [`#1324`](https://github.com/beyondmarks-ai/Wrapper/pull/1324)
+- Update xz to v0.5.15 to enable cross-compile again [`#1327`](https://github.com/beyondmarks-ai/Wrapper/pull/1327)
+- Prevent crash due to invalid theme [`#1355`](https://github.com/beyondmarks-ai/Wrapper/pull/1355)
+- Prevent panic from zero-value Renderer usage [`#1358`](https://github.com/beyondmarks-ai/Wrapper/pull/1358)
+- Remove panic statements in production code [`#1359`](https://github.com/beyondmarks-ai/Wrapper/pull/1359)
+- Allow natural_sort as sort option [`#1237`](https://github.com/beyondmarks-ai/Wrapper/pull/1237)
+- Disable interactive commands in shell mode(darwin/linux) [`#1364`](https://github.com/beyondmarks-ai/Wrapper/pull/1364)
+- Multy-column header misalignment [`#1362`](https://github.com/beyondmarks-ai/Wrapper/pull/1362)
+- Remove showing two fractional digits of Byte for files with small size [`#1370`](https://github.com/beyondmarks-ai/Wrapper/pull/1370)
+- Resolve Nix build failure [`#1373`](https://github.com/beyondmarks-ai/Wrapper/pull/1373)
+- Disable broken Nix check phase [`#1374`](https://github.com/beyondmarks-ai/Wrapper/pull/1374)
+- Reword --help for fch [`#1391`](https://github.com/beyondmarks-ai/Wrapper/pull/1391)
+- Unable to select Natural sort [`#1413`](https://github.com/beyondmarks-ai/Wrapper/pull/1413)
+- Change FormatFileSize to use configured units [`#1419`](https://github.com/beyondmarks-ai/Wrapper/pull/1419)
+- Thread safe ioReqCnt [`#1420`](https://github.com/beyondmarks-ai/Wrapper/pull/1420)
+- Files processed in deterministic order [`#1421`](https://github.com/beyondmarks-ai/Wrapper/pull/1421)
+- Detailed information about paste operation errors for the user [`#1431`](https://github.com/beyondmarks-ai/Wrapper/pull/1431)
+
+#### Optimization
+
+- Refactor sort Modal to seperate package [`#1325`](https://github.com/beyondmarks-ai/Wrapper/pull/1325)
+- Refactor helpMenu Modal to seperate package [`#1335`](https://github.com/beyondmarks-ai/Wrapper/pull/1335)
+- Refactor utils package to pkg [`#1365`](https://github.com/beyondmarks-ai/Wrapper/pull/1365)
+
+#### Documentation
+
+- Add jetbrains logo [`#1292`](https://github.com/beyondmarks-ai/Wrapper/pull/1292)
+- Grammar corrections in readme and removed a redundant link in site [`#1302`](https://github.com/beyondmarks-ai/Wrapper/pull/1302)
+- Add special thanks page [`#1317`](https://github.com/beyondmarks-ai/Wrapper/pull/1317)
+- Add missing fields to vim like wrapper hotkeys [`#1318`](https://github.com/beyondmarks-ai/Wrapper/pull/1318)
+- Add download badges to README [`#1404`](https://github.com/beyondmarks-ai/Wrapper/pull/1404)
+- Fix `behviour` -> `behaviour` typo in tmux.md [`#1427`](https://github.com/beyondmarks-ai/Wrapper/pull/1427)
+- Update core contributer [`#1429`](https://github.com/beyondmarks-ai/Wrapper/pull/1429)
+- Add notice page and fix tutorial page discuss issue [`#1433`](https://github.com/beyondmarks-ai/Wrapper/pull/1433)
+- Fix broken demo GIF path [`#1465`](https://github.com/beyondmarks-ai/Wrapper/pull/1465) by [`@NouemanKHAL`](https://github.com/NouemanKHAL)
+
+#### Dependencies
+
+- Update astro monorepo [`#1313`](https://github.com/beyondmarks-ai/Wrapper/pull/1313), [`#1376`](https://github.com/beyondmarks-ai/Wrapper/pull/1376)
+- Update Astro and Starlight dependencies [`#1294`](https://github.com/beyondmarks-ai/Wrapper/pull/1294), [`#1308`](https://github.com/beyondmarks-ai/Wrapper/pull/1308), [`#1319`](https://github.com/beyondmarks-ai/Wrapper/pull/1319), [`#1338`](https://github.com/beyondmarks-ai/Wrapper/pull/1338), [`#1383`](https://github.com/beyondmarks-ai/Wrapper/pull/1383), [`#1394`](https://github.com/beyondmarks-ai/Wrapper/pull/1394)
+- Update expressive-code plugins [`#1309`](https://github.com/beyondmarks-ai/Wrapper/pull/1309), [`#1310`](https://github.com/beyondmarks-ai/Wrapper/pull/1310), [`#1366`](https://github.com/beyondmarks-ai/Wrapper/pull/1366), [`#1377`](https://github.com/beyondmarks-ai/Wrapper/pull/1377)
+- Update website dependencies [`#1395`](https://github.com/beyondmarks-ai/Wrapper/pull/1395), [`#1396`](https://github.com/beyondmarks-ai/Wrapper/pull/1396)
+- Update Go module dependencies [`#1296`](https://github.com/beyondmarks-ai/Wrapper/pull/1296), [`#1314`](https://github.com/beyondmarks-ai/Wrapper/pull/1314), [`#1329`](https://github.com/beyondmarks-ai/Wrapper/pull/1329), [`#1339`](https://github.com/beyondmarks-ai/Wrapper/pull/1339), [`#1389`](https://github.com/beyondmarks-ai/Wrapper/pull/1389), [`#1400`](https://github.com/beyondmarks-ai/Wrapper/pull/1400), [`#1401`](https://github.com/beyondmarks-ai/Wrapper/pull/1401), [`#1418`](https://github.com/beyondmarks-ai/Wrapper/pull/1418), [`#1426`](https://github.com/beyondmarks-ai/Wrapper/pull/1426), [`#1430`](https://github.com/beyondmarks-ai/Wrapper/pull/1430), [`#1447`](https://github.com/beyondmarks-ai/Wrapper/pull/1447), [`#1450`](https://github.com/beyondmarks-ai/Wrapper/pull/1450)
+
+#### Misc
+
+- Update tracking code [`#1301`](https://github.com/beyondmarks-ai/Wrapper/pull/1301)
+- Add sidebar section layout test [`#1384`](https://github.com/beyondmarks-ai/Wrapper/pull/1384)
+- Fix incomplete test coverage in navigation_test.go [`#1387`](https://github.com/beyondmarks-ai/Wrapper/pull/1387)
+- Add new workflow for PR auto labeling [`#1398`](https://github.com/beyondmarks-ai/Wrapper/pull/1398)
+- Fix GitHub auto-labeling workflow [`#1405`](https://github.com/beyondmarks-ai/Wrapper/pull/1405)
+- Update GitHub Actions workflow triggers and permissions [`#1424`](https://github.com/beyondmarks-ai/Wrapper/pull/1424)
+- Some tests for modal error message [`#1435`](https://github.com/beyondmarks-ai/Wrapper/pull/1435)
+- Update workflow configuration [`#1451`](https://github.com/beyondmarks-ai/Wrapper/pull/1451)
+
+# [**v1.5.0**](https://github.com/beyondmarks-ai/Wrapper/releases/tag/v1.5.0)
+
+> 2026-01-11
+
+#### Update
+
+- allow hover to file [`#1177`](https://github.com/beyondmarks-ai/Wrapper/pull/1177)
+- show count selected items in select mode [`#1187`](https://github.com/beyondmarks-ai/Wrapper/pull/1187)
+- Add icon alias for kts to kt [`#1153`](https://github.com/beyondmarks-ai/Wrapper/pull/1153)
+- link icon and metadata [`#1171`](https://github.com/beyondmarks-ai/Wrapper/pull/1171)
+- user configuration of editors by file extension [`#1197`](https://github.com/beyondmarks-ai/Wrapper/pull/1197)
+- add video preview support [`#1178`](https://github.com/beyondmarks-ai/Wrapper/pull/1178)
+- Add pdf preview support [`#1198`](https://github.com/beyondmarks-ai/Wrapper/pull/1198)
+- Add icons in pinned directories [`#1215`](https://github.com/beyondmarks-ai/Wrapper/pull/1215)
+- Enable fast configurable navigation [`#1220`](https://github.com/beyondmarks-ai/Wrapper/pull/1220)
+- add Trash bin to default directories for Linux [`#1236`](https://github.com/beyondmarks-ai/Wrapper/pull/1236)
+- add terminal stdout support for shell commands [`#1250`](https://github.com/beyondmarks-ai/Wrapper/pull/1250)
+- More columns in file panel (MVP) [`#1268`](https://github.com/beyondmarks-ai/Wrapper/pull/1268)
+
+#### Bug Fix
+
+- only calculate checksum on files [`#1119`](https://github.com/beyondmarks-ai/Wrapper/pull/1119)
+- Linter issue with PrintfAndExit [`#1133`](https://github.com/beyondmarks-ai/Wrapper/pull/1133)
+- Remove repeated os.ReadDir calls [`#1155`](https://github.com/beyondmarks-ai/Wrapper/pull/1155)
+- Disable COPYFILE in macOS [`#1194`](https://github.com/beyondmarks-ai/Wrapper/pull/1194)
+- add missing hotkeys to help menu [`#1192`](https://github.com/beyondmarks-ai/Wrapper/pull/1192)
+- Fetch latest version automatically [`#1127`](https://github.com/beyondmarks-ai/Wrapper/pull/1127)
+- Use async methods to prevent test race conditions [`#1201`](https://github.com/beyondmarks-ai/Wrapper/pull/1201)
+- update metadata and process bar sizes when toggling footer [`#1218`](https://github.com/beyondmarks-ai/Wrapper/pull/1218)
+- File panel dimension management [`#1222`](https://github.com/beyondmarks-ai/Wrapper/pull/1222)
+- Layout fixes with full end-to-end tests [`#1227`](https://github.com/beyondmarks-ai/Wrapper/pull/1227)
+- Fix flaky tests [`#1233`](https://github.com/beyondmarks-ai/Wrapper/pull/1233)
+- modal confirmation bug with arrow keys [`#1243`](https://github.com/beyondmarks-ai/Wrapper/pull/1243)
+- small file panel optimization [`#1241`](https://github.com/beyondmarks-ai/Wrapper/pull/1241)
+- use ExtractOperationMsg for extraction [`#1248`](https://github.com/beyondmarks-ai/Wrapper/pull/1248)
+- skip open_with from missing field validation [`#1251`](https://github.com/beyondmarks-ai/Wrapper/pull/1251)
+- border height validation fixes [`#1267`](https://github.com/beyondmarks-ai/Wrapper/pull/1267)
+- fix case with two active panes [`#1271`](https://github.com/beyondmarks-ai/Wrapper/pull/1271)
+- help model formatting [`#1277`](https://github.com/beyondmarks-ai/Wrapper/pull/1277)
+
+#### Optimization
+
+- simplify renameIfDuplicate logic [`#1100`](https://github.com/beyondmarks-ai/Wrapper/pull/1100)
+- separate FilePanel into dedicated package [`#1195`](https://github.com/beyondmarks-ai/Wrapper/pull/1195)
+- File model separation [`#1223`](https://github.com/beyondmarks-ai/Wrapper/pull/1223)
+- Dimension validations [`#1224`](https://github.com/beyondmarks-ai/Wrapper/pull/1224)
+- layout validation and sidebar dimension fixes [`#1228`](https://github.com/beyondmarks-ai/Wrapper/pull/1228)
+- user rendering package and removal of unused preview code [`#1245`](https://github.com/beyondmarks-ai/Wrapper/pull/1245)
+- user rendering package for file preview [`#1249`](https://github.com/beyondmarks-ai/Wrapper/pull/1249)
+
+#### Documentation
+
+- update Fish shell setup docs [`#1142`](https://github.com/beyondmarks-ai/Wrapper/pull/1142)
+- fix macOS typo [`#1212`](https://github.com/beyondmarks-ai/Wrapper/pull/1212)
+- stylistic and linguistic cleanup of config documentation [`#1184`](https://github.com/beyondmarks-ai/Wrapper/pull/1184)
+
+#### Dependencies
+
+- update astro monorepo [`#1010`](https://github.com/beyondmarks-ai/Wrapper/pull/1010)
+- update starlight-giscus [`#1020`](https://github.com/beyondmarks-ai/Wrapper/pull/1020)
+- bump astro versions [`#1138`](https://github.com/beyondmarks-ai/Wrapper/pull/1138), [`#1157`](https://github.com/beyondmarks-ai/Wrapper/pull/1157), [`#1158`](https://github.com/beyondmarks-ai/Wrapper/pull/1158)
+- bump vite [`#1134`](https://github.com/beyondmarks-ai/Wrapper/pull/1134)
+- update setup-go action [`#1038`](https://github.com/beyondmarks-ai/Wrapper/pull/1038)
+- update expressive-code plugins [`#1189`](https://github.com/beyondmarks-ai/Wrapper/pull/1189), [`#1246`](https://github.com/beyondmarks-ai/Wrapper/pull/1246)
+- update sharp [`#1256`](https://github.com/beyondmarks-ai/Wrapper/pull/1256)
+- update fontsource monorepo [`#1257`](https://github.com/beyondmarks-ai/Wrapper/pull/1257)
+- update urfave/cli [`#1136`](https://github.com/beyondmarks-ai/Wrapper/pull/1136), [`#1190`](https://github.com/beyondmarks-ai/Wrapper/pull/1190)
+- update astro / starlight / ansi / toolchain deps [`#1275`](https://github.com/beyondmarks-ai/Wrapper/pull/1275), [`#1278`](https://github.com/beyondmarks-ai/Wrapper/pull/1278), [`#1280`](https://github.com/beyondmarks-ai/Wrapper/pull/1280)
+- update python and go versions [`#1276`](https://github.com/beyondmarks-ai/Wrapper/pull/1276), [`#1191`](https://github.com/beyondmarks-ai/Wrapper/pull/1191)
+- update golangci-lint action [`#1286`](https://github.com/beyondmarks-ai/Wrapper/pull/1286)
+
+#### Misc
+
+- update CI input names [`#1120`](https://github.com/beyondmarks-ai/Wrapper/pull/1120)
+- Everforest Dark Hard theme [`#1114`](https://github.com/beyondmarks-ai/Wrapper/pull/1114)
+- migrate tutorial demo assets to local [`#1140`](https://github.com/beyondmarks-ai/Wrapper/pull/1140)
+- new logo asset [`#1145`](https://github.com/beyondmarks-ai/Wrapper/pull/1145)
+- mirror repository to codeberg [`#1141`](https://github.com/beyondmarks-ai/Wrapper/pull/1141)
+- sync package lock [`#1143`](https://github.com/beyondmarks-ai/Wrapper/pull/1143)
+- bump golangci-lint version [`#1135`](https://github.com/beyondmarks-ai/Wrapper/pull/1135)
+- add gosec linter [`#1185`](https://github.com/beyondmarks-ai/Wrapper/pull/1185)
+- enable MND linter and clean magic numbers [`#1180`](https://github.com/beyondmarks-ai/Wrapper/pull/1180)
+- skip permission tests when running as root [`#1186`](https://github.com/beyondmarks-ai/Wrapper/pull/1186)
+- release v1.4.1-rc [`#1203`](https://github.com/beyondmarks-ai/Wrapper/pull/1203)
+- 1.5.0-rc1 housekeeping changes [`#1264`](https://github.com/beyondmarks-ai/Wrapper/pull/1264)
+
+# [**v1.4.0**](https://github.com/beyondmarks-ai/Wrapper/releases/tag/v1.4.0)
+
+> 2025-10-10
+
+#### Update
+
+- feat: File operation via tea cmd by [`#963`](https://github.com/beyondmarks-ai/Wrapper/pull/963)
+- feat: processbar improvements, package separation, better channel management by [`#970`](https://github.com/beyondmarks-ai/Wrapper/pull/970)
+- feat: processbar improvements, package separation, better channel management by [`#973`](https://github.com/beyondmarks-ai/Wrapper/pull/973)
+- feat: enable lll and recvcheck linter, fix tests, more refactors by [`#977`](https://github.com/beyondmarks-ai/Wrapper/pull/977)
+- feat: Remove channel for notification models by [`#979`](https://github.com/beyondmarks-ai/Wrapper/pull/979)
+- feat: enable cyclop, funlen, gocognit, gocyclo linters, and refactor large functions by [`#984`](https://github.com/beyondmarks-ai/Wrapper/pull/984)
+- feat: Add a new hotkey to handle cd-on-quit whenever needed by [`#924`](https://github.com/beyondmarks-ai/Wrapper/pull/924)
+- feat: added option to permanently delete files by [`#987`](https://github.com/beyondmarks-ai/Wrapper/pull/987)
+- feat: Preview panel separation by [`#1021`](https://github.com/beyondmarks-ai/Wrapper/pull/1021)
+- feat: Add search functionality to help menu by [`#1011`](https://github.com/beyondmarks-ai/Wrapper/pull/1011)
+- feat: Use zoxide lib by [`#1036`](https://github.com/beyondmarks-ai/Wrapper/pull/1036)
+- feat: Add zoxide directory tracking on navigation by [`#1041`](https://github.com/beyondmarks-ai/Wrapper/pull/1041)
+- feat: Zoxide integration by [`#1039`](https://github.com/beyondmarks-ai/Wrapper/pull/1039)
+- feat: Select mode with better feedback by [`#1074`](https://github.com/beyondmarks-ai/Wrapper/pull/1074)
+- feat: owner/group in the metadata by [`#1093`](https://github.com/beyondmarks-ai/Wrapper/pull/1093)
+- feat: Async zoxide by [`#1104`](https://github.com/beyondmarks-ai/Wrapper/pull/1104)
+
+#### Bug Fix
+
+- fix: sorting in searchbar by [`#985`](https://github.com/beyondmarks-ai/Wrapper/pull/985)
+- fix: Async rendering, Include clipboard check in paste items, and update linter configs by [`#997`](https://github.com/beyondmarks-ai/Wrapper/pull/997)
+- fix: Move utility functions to utils package by [`#1012`](https://github.com/beyondmarks-ai/Wrapper/pull/1012)
+- fix: Refactoring and separation of preview panel and searchbar in help menu by [`#1013`](https://github.com/beyondmarks-ai/Wrapper/pull/1013)
+- fix(filePanel): allow focusType to be set correctly by [`#1033`](https://github.com/beyondmarks-ai/Wrapper/pull/1033)
+- fix(ci): Update gomod2nix.toml, allow pre release in version output, release 1.4.0-rc1, bug fixes, and improvements by [`#1054`](https://github.com/beyondmarks-ai/Wrapper/pull/1054)
+- fix(nix): resolve build failures in the nix flake by [`#1068`](https://github.com/beyondmarks-ai/Wrapper/pull/1068)
+- fix: Retry the file deletion to prevent flakies (#938) by [`#1076`](https://github.com/beyondmarks-ai/Wrapper/pull/1076)
+- fix(issue-1066): Fixed issue where enter was not searchable by [`#1078`](https://github.com/beyondmarks-ai/Wrapper/pull/1078)
+- fix(#1073): Tech debt fix by [`#1077`](https://github.com/beyondmarks-ai/Wrapper/pull/1077)
+- fix: fix deleted directory not able to remove from pins (#1067) by [`#1081`](https://github.com/beyondmarks-ai/Wrapper/pull/1081)
+- fix: fix child process spawning attached by [`#1084`](https://github.com/beyondmarks-ai/Wrapper/pull/1084)
+- fix: always clear images when showing a FullScreenStyle by [`#1094`](https://github.com/beyondmarks-ai/Wrapper/pull/1094)
+- fix: Allow j and k keys in zoxide by [`#1102`](https://github.com/beyondmarks-ai/Wrapper/pull/1102)
+- fix: Zoxide improvements and 1.4.0-rc2 by [`#1105`](https://github.com/beyondmarks-ai/Wrapper/pull/1105)
+- fix: rename cursor beginning on wrong character because of multiple dots in name (#813) by [`#1112`](https://github.com/beyondmarks-ai/Wrapper/pull/1112)
+- fix: check and fix file panel scroll position on height changes by [`#1095`](https://github.com/beyondmarks-ai/Wrapper/pull/1095)
+
+#### Optimization
+
+- perf(website): optimize font loading and asset organization by [`#1089`](https://github.com/beyondmarks-ai/Wrapper/pull/1089)
+
+#### Documentation
+
+- docs: fix incorrect zoxide plugin config name by [`#1049`](https://github.com/beyondmarks-ai/Wrapper/pull/1049)
+- docs(hotkeys): Fix typo in vimHotkeys.toml comments by [`#1080`](https://github.com/beyondmarks-ai/Wrapper/pull/1080)
+- docs: add section for core maintainers in README.md by [`#1088`](https://github.com/beyondmarks-ai/Wrapper/pull/1088)
+- chore: add winget install instruction to readme and website by [`#943`](https://github.com/beyondmarks-ai/Wrapper/pull/943)
+
+#### Dependencies
+
+- chore(deps): update dependency go to v1.25.0, golangci-lint to v2, golangci-lint actions to v8 by [`#750`](https://github.com/beyondmarks-ai/Wrapper/pull/750)
+- chore(deps): update amannn/action-semantic-pull-request action to v6 by [`#1006`](https://github.com/beyondmarks-ai/Wrapper/pull/1006)
+- chore(deps): update actions/first-interaction action to v3 by [`#1005`](https://github.com/beyondmarks-ai/Wrapper/pull/1005)
+- chore(deps): update actions/checkout action to v5 by [`#1004`](https://github.com/beyondmarks-ai/Wrapper/pull/1004)
+- chore(deps): bump astro from 5.10.1 to 5.12.8 by [`#982`](https://github.com/beyondmarks-ai/Wrapper/pull/982)
+- fix(deps): update module golang.org/x/mod to v0.27.0 by [`#989`](https://github.com/beyondmarks-ai/Wrapper/pull/989)
+- fix(deps): update dependency @expressive-code/plugin-collapsible-sections to v0.41.3 by [`#990`](https://github.com/beyondmarks-ai/Wrapper/pull/990)
+- fix(deps): update dependency sharp to v0.34.3 by [`#992`](https://github.com/beyondmarks-ai/Wrapper/pull/992)
+- fix(deps): update dependency @expressive-code/plugin-line-numbers to v0.41.3 by [`#991`](https://github.com/beyondmarks-ai/Wrapper/pull/991)
+- chore(deps): update dependency go to v1.25.0 by [`#994`](https://github.com/beyondmarks-ai/Wrapper/pull/994)
+- fix(deps): update astro monorepo by [`#995`](https://github.com/beyondmarks-ai/Wrapper/pull/995)
+- fix(deps): update dependency @astrojs/starlight to ^0.35.0 by [`#1000`](https://github.com/beyondmarks-ai/Wrapper/pull/1000)
+- fix(deps): update module github.com/urfave/cli/v3 to v3.4.1 by [`#1001`](https://github.com/beyondmarks-ai/Wrapper/pull/1001)
+- fix(deps): update module golang.org/x/text to v0.28.0 by [`#1003`](https://github.com/beyondmarks-ai/Wrapper/pull/1003)
+
+#### Misc
+
+- chore: migrate from wrapper.netlify.app to wrapper.dev by [`#1087`](https://github.com/beyondmarks-ai/Wrapper/pull/1087)
+- refactor(filepanel): replace filePanelFocusType with isFocused boolean by [`#1040`](https://github.com/beyondmarks-ai/Wrapper/pull/1040)
+- refactor(ansi): Migrate from github.com/charmbracelet/x/exp/term/ansi to github.com/charmbracelet/x/ansi by [`#1044`](https://github.com/beyondmarks-ai/Wrapper/pull/1044)
+- refactor: common operation on pinned directory file using PinnedManager by [`#1085`](https://github.com/beyondmarks-ai/Wrapper/pull/1085)
+- test: unit tests for pinned manager by [`#1090`](https://github.com/beyondmarks-ai/Wrapper/pull/1090)
+
+# [**v1.3.3**](https://github.com/beyondmarks-ai/Wrapper/releases/tag/v1.3.3)
+
+> 2025-07-25
+
+#### Update
+
+- feat: Metadata loading via bubbletea's tea.Cmd method, removed usage channels and custom goroutines by [`#947`](https://github.com/beyondmarks-ai/Wrapper/pull/947)
+- feat: Metadata panel into separate package, UI bug fixes, Code improvements[`#950`](https://github.com/beyondmarks-ai/Wrapper/pull/950)
+
+#### Bug Fix
+
+- fix: windows test ci by [`#941`](https://github.com/beyondmarks-ai/Wrapper/pull/941)
+- fix: fixing `config.toml` by [`#952`](https://github.com/beyondmarks-ai/Wrapper/pull/952)
+
+#### Misc
+
+- chore: update pnpm-lcok.yaml by [`#937`](https://github.com/beyondmarks-ai/Wrapper/pull/937)
+- feat: add support for Python virtual environment in testsuite setup[`#956`](https://github.com/beyondmarks-ai/Wrapper/pull/956)
+
+# [**v1.3.2**](https://github.com/beyondmarks-ai/Wrapper/releases/tag/v1.3.2)
+
+> 2025-07-16
+
+#### Update
+
+- Normalize user-facing naming to wrapper [`#880`](https://github.com/beyondmarks-ai/Wrapper/pull/880)
+- Add kitty protocol for image preview [`#841`](https://github.com/beyondmarks-ai/Wrapper/pull/841)
+- feat: add Zoxide support for path resolution in initial configuration [`#892`](https://github.com/beyondmarks-ai/Wrapper/pull/892)
+- feat: update wrapper's help output [`#908`](https://github.com/beyondmarks-ai/Wrapper/pull/908)
+- feat: Add Action to Publish to Winget [`#925`](https://github.com/beyondmarks-ai/Wrapper/pull/925)
+- feat: update wrapper build test for the windows and macOS [`#922`](https://github.com/beyondmarks-ai/Wrapper/pull/922)
+- Compress all files selected [`#821`](https://github.com/beyondmarks-ai/Wrapper/pull/821)
+- Theme: add 0x96f theme [`#860`](https://github.com/beyondmarks-ai/Wrapper/pull/860)
+
+#### Bug fix
+
+- fix: outdated and broken nix flake [`#846`](https://github.com/beyondmarks-ai/Wrapper/pull/846)
+- fix: handle UTF-8 BOM in file reader [`#865`](https://github.com/beyondmarks-ai/Wrapper/pull/865)
+- fix icon displayed on wrap prompt when nerdfont disabled [`#878`](https://github.com/beyondmarks-ai/Wrapper/pull/878)
+- fix: create item check for dot-entries [`#817`](https://github.com/beyondmarks-ai/Wrapper/pull/817)
+- fix: prevent pasting a directory into itself, avoiding infinite loop [`#887`](https://github.com/beyondmarks-ai/Wrapper/pull/887)
+- fix: clear search bar value on parent directory reset [`#906`](https://github.com/beyondmarks-ai/Wrapper/pull/906)
+- fix: enhance terminal pixel detection and response handling [`#904`](https://github.com/beyondmarks-ai/Wrapper/pull/904)
+- fix: Cannot Build wrapper on Windows [`#921`](https://github.com/beyondmarks-ai/Wrapper/pull/921)
+- fix: Improve command tokenization to handle quotes and escapes [`#931`](https://github.com/beyondmarks-ai/Wrapper/pull/931)
+- fix: Dont read special files, and prevent freeze [`#932`](https://github.com/beyondmarks-ai/Wrapper/pull/932)
+
+#### Optimization
+
+- Metadata and filepanel rendering refactor [`#867`](https://github.com/beyondmarks-ai/Wrapper/pull/867)
+- refactor: simplify panel mode handling in file movement logic [`#907`](https://github.com/beyondmarks-ai/Wrapper/pull/907)
+- refactor: standardize TODO comments and ReadMe to README [`#913`](https://github.com/beyondmarks-ai/Wrapper/pull/913)
+
+#### Documentation
+
+- enhance: add detailed documentation for InitIcon function and update … [`#879`](https://github.com/beyondmarks-ai/Wrapper/pull/879)
+- docs: add documentation for image preview [`#882`](https://github.com/beyondmarks-ai/Wrapper/pull/882)
+- docs: update contributing guide and PR template [`#885`](https://github.com/beyondmarks-ai/Wrapper/pull/885)
+- docs: update README and plugin documentation for clarity and structure [`#902`](https://github.com/beyondmarks-ai/Wrapper/pull/902)
+- feat(docs): Update arch install package docs [`#929`](https://github.com/beyondmarks-ai/Wrapper/pull/929)
+
+#### CI/CD
+
+- ci: add PR title linting with semantic-pull-request action [`#884`](https://github.com/beyondmarks-ai/Wrapper/pull/884)
+- ci: improve PR workflows with contributor greeting and title linter fix [`#886`](https://github.com/beyondmarks-ai/Wrapper/pull/886)
+
+#### Dependencies
+
+- build(deps): bump prismjs from 1.29.0 to 1.30.0 in /website [`#786`](https://github.com/beyondmarks-ai/Wrapper/pull/786)
+- fix(deps): update dependency astro to v5.8.0 [`#787`](https://github.com/beyondmarks-ai/Wrapper/pull/787)
+- chore(deps): bump vite from 6.3.3 to 6.3.5 in /website [`#822`](https://github.com/beyondmarks-ai/Wrapper/pull/822)
+- fix(deps): update dependency sharp to v0.34.2 [`#909`](https://github.com/beyondmarks-ai/Wrapper/pull/909)
+- fix(deps): update astro monorepo [`#894`](https://github.com/beyondmarks-ai/Wrapper/pull/894)
+- fix(deps): update fontsource monorepo to v5.2.6 [`#910`](https://github.com/beyondmarks-ai/Wrapper/pull/910)
+
+#### Misc
+
+- chore(license): update copyright year [`#895`](https://github.com/beyondmarks-ai/Wrapper/pull/895)
+- feat: add ignore missing field flag [`#881`](https://github.com/beyondmarks-ai/Wrapper/pull/881)
+- feat: add sitemap integration and update giscus input position [`#912`](https://github.com/beyondmarks-ai/Wrapper/pull/912)
+
+# [**v1.3.1**](https://github.com/beyondmarks-ai/Wrapper/releases/tag/v1.3.1)
+
+> 2025-05-27
+
+#### Update
+
+- Replace custom giscus implementation with official starlight-giscus plugin [`#843`](https://github.com/beyondmarks-ai/Wrapper/pull/843)
+- Add 'Type' option for sorting by file extension with fallback [`#829`](https://github.com/beyondmarks-ai/Wrapper/pull/829)
+
+#### Bug Fixes
+
+- Correct icons for clipboard files [`#845`](https://github.com/beyondmarks-ai/Wrapper/pull/845)
+- Replace mattn/rundwidth with ansi package for more robust StringWidth [`#848`](https://github.com/beyondmarks-ai/Wrapper/pull/848)
+- Purego package update [`#837`](https://github.com/beyondmarks-ai/Wrapper/pull/837)
+
+#### Optimization
+
+- Update main.go [`#839`](https://github.com/beyondmarks-ai/Wrapper/pull/839)
+
+# [**v1.3.0**](https://github.com/beyondmarks-ai/Wrapper/releases/tag/v1.3.0)
+
+> 2025-05-22
+
+#### Update
+
+- Added a Command-Prompt for Wrapper specific actions [`#752`](https://github.com/beyondmarks-ai/Wrapper/pull/752)
+- Allow specifying multiple panels at startup [`#759`](https://github.com/beyondmarks-ai/Wrapper/pull/759)
+- Initial draft of rendering package [`#775`](https://github.com/beyondmarks-ai/Wrapper/pull/775)
+- Render unit tests for prompt model [`#809`](https://github.com/beyondmarks-ai/Wrapper/pull/809)
+- Chooser file option, --lastdir-file option, and improvements in quit, and bug fixes [`#812`](https://github.com/beyondmarks-ai/Wrapper/pull/812)
+- Prompt feature leftover items [`#804`](https://github.com/beyondmarks-ai/Wrapper/pull/804)
+- WRAP Prompt tutorial and fixes [`#814`](https://github.com/beyondmarks-ai/Wrapper/pull/814)
+- Write prompt tutorial, rename prompt mode to wrap mode, add develop branch in GitHub workflow, show_panel_footer_info flag [`#815`](https://github.com/beyondmarks-ai/Wrapper/pull/815)
+- Theme: Add gruvbox-dark-hard [`#828`](https://github.com/beyondmarks-ai/Wrapper/pull/828)
+- Sidebar separation [`#767`](https://github.com/beyondmarks-ai/Wrapper/pull/767)
+- Sidebar code separation [`#770`](https://github.com/beyondmarks-ai/Wrapper/pull/770)
+- Rendering package and rendering bug fixes [`#781`](https://github.com/beyondmarks-ai/Wrapper/pull/781)
+- Refactor CheckForUpdates [`#797`](https://github.com/beyondmarks-ai/Wrapper/pull/797)
+- Rename metadata strings [`#731`](https://github.com/beyondmarks-ai/Wrapper/pull/731)
+
+#### Bug Fixes
+
+- Fix crash with opening file with editor on an empty panel [`#730`](https://github.com/beyondmarks-ai/Wrapper/pull/730)
+- Fix: Add some of the remaining linter and fix errors [`#756`](https://github.com/beyondmarks-ai/Wrapper/pull/756)
+- Golangci lint fixes [`#757`](https://github.com/beyondmarks-ai/Wrapper/pull/757)
+- Fix: Remove redundant function containsKey [`#765`](https://github.com/beyondmarks-ai/Wrapper/pull/765)
+- Fix: Correctly resolve path in open and cd prompt actions [`#802`](https://github.com/beyondmarks-ai/Wrapper/pull/802)
+- Prompt dynamic dimensions and unit tests fix [`#805`](https://github.com/beyondmarks-ai/Wrapper/pull/805)
+- Fix: Convert unicode space to normal space, use rendered in file preview to fix layout bugs, Release 1.3.0 [`#825`](https://github.com/beyondmarks-ai/Wrapper/pull/825)
+
+#### Optimization
+
+- Adding linter to CI/CD and fix some lint issues [`#739`](https://github.com/beyondmarks-ai/Wrapper/pull/739)
+- Linter fixes, new feature of allowing multiple directories at startup, other code improvements [`#764`](https://github.com/beyondmarks-ai/Wrapper/pull/764)
+- Model unit tests [`#803`](https://github.com/beyondmarks-ai/Wrapper/pull/803)
+
+# [**v1.2.1**](https://github.com/beyondmarks-ai/Wrapper/releases/tag/v1.2.1)
+
+> 2025-03-26
+
+#### Update
+
+- Add show_image_preview flag [`#728`](https://github.com/beyondmarks-ai/Wrapper/pull/728)
+- Allow specifying directory icon color in theme files [`#709`](https://github.com/beyondmarks-ai/Wrapper/pull/709)
+- --hotkey-file flag and fix in configFileFlag [`#700`](https://github.com/beyondmarks-ai/Wrapper/pull/700)
+- File preview: Add bat as plugin [`#686`](https://github.com/beyondmarks-ai/Wrapper/pull/686)
+- Monokai Theme [`#673`](https://github.com/beyondmarks-ai/Wrapper/pull/673)
+
+#### Bug fix
+
+- Fix broken link in website causing 404 [`#714`](https://github.com/beyondmarks-ai/Wrapper/pull/714)
+- Fix sidebar disk listing [`#708`](https://github.com/beyondmarks-ai/Wrapper/pull/708)
+- Switch to semver for newer 1.2.1 release [`#687`](https://github.com/beyondmarks-ai/Wrapper/pull/687)
+
+#### Optimization
+
+- Fix: icon consts [`#719`](https://github.com/beyondmarks-ai/Wrapper/pull/719)
+- Refactor and unit tests for scrolling [`#710`](https://github.com/beyondmarks-ai/Wrapper/pull/710)
+- Refactor of wheel functions [`#695`](https://github.com/beyondmarks-ai/Wrapper/pull/695)
+
+#### Documentation
+
+- Add info about auto update [`#721`](https://github.com/beyondmarks-ai/Wrapper/pull/721)
+- add cd_on_quit for fish shell [`#696`](https://github.com/beyondmarks-ai/Wrapper/pull/696)
+- Add Pixi installation instructions [`#690`](https://github.com/beyondmarks-ai/Wrapper/pull/690)
+
+# [**v1.2.0.0**](https://github.com/beyondmarks-ai/Wrapper/releases/tag/v1.2.0.0)
+
+> 2025-03-05
+
+#### Update
+
+- Added direnv support for nix flake dev shell [`#568`](https://github.com/beyondmarks-ai/Wrapper/pull/568)
+- Move rename cursor to start before the extension [`#565`](https://github.com/beyondmarks-ai/Wrapper/pull/565)
+- Renaming feature for pinned directories [`#579`](https://github.com/beyondmarks-ai/Wrapper/pull/579)
+- Add python testsuite [`#581`](https://github.com/beyondmarks-ai/Wrapper/pull/581)
+- Add build instructions for windows [`#583`](https://github.com/beyondmarks-ai/Wrapper/pull/583)
+- Add `--config-file` flag support [`#592`](https://github.com/beyondmarks-ai/Wrapper/pull/592)
+- Document Windows scoop installation option [`#595`](https://github.com/beyondmarks-ai/Wrapper/pull/595)
+- Rotate image using EXIF metadata [`#607`](https://github.com/beyondmarks-ai/Wrapper/pull/607)
+- Upgrade sidebar search [`#614`](https://github.com/beyondmarks-ai/Wrapper/pull/614)
+- Change all outPutLog to slog.Error or slog.Info [`#628`](https://github.com/beyondmarks-ai/Wrapper/pull/628)
+- Add install.sh files link for more trust [`#645`](https://github.com/beyondmarks-ai/Wrapper/pull/645)
+- Update README.md and added a Run the app title [`#550`](https://github.com/beyondmarks-ai/Wrapper/pull/550)
+
+#### Bug fix
+
+- Fix sort options hotkey [`#548`](https://github.com/beyondmarks-ai/Wrapper/pull/548)
+- Fix wrong log line, Fatalln was used with formatting verbs [`#555`](https://github.com/beyondmarks-ai/Wrapper/pull/555)
+- Fix incorrect failure reporting in delete operation [`#558`](https://github.com/beyondmarks-ai/Wrapper/pull/558)
+- Fix previews for text file with control characters [`#557`](https://github.com/beyondmarks-ai/Wrapper/pull/557)
+- Fix search field key blocking [`#569`](https://github.com/beyondmarks-ai/Wrapper/pull/569)
+- Fix windows operations and other improvements [`#564`](https://github.com/beyondmarks-ai/Wrapper/pull/564)
+- Fix crash when searching on WSL mounted drives [`#576`](https://github.com/beyondmarks-ai/Wrapper/pull/576)
+- Fix arch install instructions [`#580`](https://github.com/beyondmarks-ai/Wrapper/pull/580)
+- Fix windows delete, open file and other improvements [`#584`](https://github.com/beyondmarks-ai/Wrapper/pull/584)
+- Fix UI issue of wrap stuck with terminal size too small [`#594`](https://github.com/beyondmarks-ai/Wrapper/pull/594)
+- Fix wrong path separator in windows [`#597`](https://github.com/beyondmarks-ai/Wrapper/pull/597)
+- Fix command line not working for windows [`#601`](https://github.com/beyondmarks-ai/Wrapper/pull/601)
+- Fix error while reading last check version file in new time zone [`#634`](https://github.com/beyondmarks-ai/Wrapper/pull/634)
+- Fix discrete timeout for HTTP get version [`#632`](https://github.com/beyondmarks-ai/Wrapper/pull/632)
+- Fix initial pinned.json having invalid JSON [`#652`](https://github.com/beyondmarks-ai/Wrapper/pull/652)
+- Fix loadConfigFile and loadHotkeysFile functions [`#650`](https://github.com/beyondmarks-ai/Wrapper/pull/650)
+- Fix issue when trying to extract a file with .zip\_ extension [`#636`](https://github.com/beyondmarks-ai/Wrapper/pull/636)
+- Fix openFileWithEditor bug [`#635`](https://github.com/beyondmarks-ai/Wrapper/pull/635)
+- Fix partial overwrite issue by ensuring full file rewrite [`#665`](https://github.com/beyondmarks-ai/Wrapper/pull/665)
+
+#### Optimization
+
+- Improving file panel rendering [`#589`](https://github.com/beyondmarks-ai/Wrapper/pull/589)
+- Improve formatting, error handling, and fix typos [`#600`](https://github.com/beyondmarks-ai/Wrapper/pull/600)
+- Go formatting fixes [`#618`](https://github.com/beyondmarks-ai/Wrapper/pull/618)
+- Testsuite in GitHub Actions [`#602`](https://github.com/beyondmarks-ai/Wrapper/pull/602)
+
+#### Documentation
+
+- Revert changes in website that were not yet released [`#611`](https://github.com/beyondmarks-ai/Wrapper/pull/611)
+- Docs contribute [`#610`](https://github.com/beyondmarks-ai/Wrapper/pull/610)
+- Remove godocs badge [`#627`](https://github.com/beyondmarks-ai/Wrapper/pull/627)
+- Update installation.md to note setting nerd-font in terminal application [`#658`](https://github.com/beyondmarks-ai/Wrapper/pull/658)
+- Fix README typos [`#653`](https://github.com/beyondmarks-ai/Wrapper/pull/653)
+
+# [**v1.1.7.1**](https://github.com/beyondmarks-ai/Wrapper/releases/tag/v1.1.7)
+
+> 2024-01-06
+
+NOTE: This release is a hotfix to resolve an unusual issue on Windows.
+
+#### Bug fix
+
+- Fix can't run on windows [`#534`](https://github.com/beyondmarks-ai/Wrapper/issues/534)
+
+# [**v1.1.7**](https://github.com/beyondmarks-ai/Wrapper/releases/tag/v1.1.7)
+
+> 2024-01-05
+
+#### Update
+
+- OneDark Theme added [`#477`](https://github.com/beyondmarks-ai/Wrapper/pull/477)
+- Add keys PageUp and PageDown for better navigation [`#498`](https://github.com/beyondmarks-ai/Wrapper/pull/498)
+- Add hotkey for copying PWD to clipboard [`#510`](https://github.com/beyondmarks-ai/Wrapper/pull/510)
+- Add desktop entry [`#501`](https://github.com/beyondmarks-ai/Wrapper/pull/501)
+- Enable cd_on_quit when current directory is home directory [`#518`](https://github.com/beyondmarks-ai/Wrapper/pull/518)
+- Edit wrapper config [`#509`](https://github.com/beyondmarks-ai/Wrapper/pull/509)
+
+#### Bug fix
+
+- Fix rendering directory symlinks as directories, not files [`#481`](https://github.com/beyondmarks-ai/Wrapper/pull/481)
+- Fix opening files on Windows [`#496`](https://github.com/beyondmarks-ai/Wrapper/pull/496)
+- Fix lag in dotfile toggle with multiple panels [`#499`](https://github.com/beyondmarks-ai/Wrapper/pull/499)
+- Fix parent directory navigation on Windows [`#502`](https://github.com/beyondmarks-ai/Wrapper/pull/502)
+- Fix panic when deleting last file in directory [`#529`](https://github.com/beyondmarks-ai/Wrapper/pull/529)
+- Fix panic when scrolling through an empty metadata list [`#531`](https://github.com/beyondmarks-ai/Wrapper/pull/531)
+- Fix panic when trying to get folder size without needed permissions [`#532`](https://github.com/beyondmarks-ai/Wrapper/pull/532)
+- Fix lag when navigating directories with large image files [`#525`](https://github.com/beyondmarks-ai/Wrapper/pull/525)
+- Fix typo in welcome message [`#494`](https://github.com/beyondmarks-ai/Wrapper/pull/494)
+
+#### Optimization
+
+- Optimize file move operation [`#522`](https://github.com/beyondmarks-ai/Wrapper/pull/522)
+- Optimize file extraction [`#524`](https://github.com/beyondmarks-ai/Wrapper/pull/524)
+- Warn overwrite when renaming files [`#526`](https://github.com/beyondmarks-ai/Wrapper/pull/526)
+- Work without trash [`#527`](https://github.com/beyondmarks-ai/Wrapper/pull/527)
+
+# [**v1.1.6**](https://github.com/beyondmarks-ai/Wrapper/releases/tag/v1.1.6)
+
+> 2024-11-21
+
+#### Update
+
+- Add sort case toggle [`#469`](https://github.com/beyondmarks-ai/Wrapper/issues/469)
+- Add Sort options [`#420`](https://github.com/beyondmarks-ai/Wrapper/pull/420)
+- Fix flashing when switching between panels [`#122`](https://github.com/beyondmarks-ai/Wrapper/issues/122)
+
+#### Bug fix
+
+- Fix some hotkey broken
+- Fix the searchbar to automatically put the open key into the searchbar [`ec9e256`](https://github.com/beyondmarks-ai/Wrapper/commit/b20bc70fe9d4e0ee96931092a6522e8604cc017b)
+
+# [**v1.1.5**](https://github.com/beyondmarks-ai/Wrapper/releases/tag/v1.1.5)
+
+> 2024-10-03
+
+#### Update
+
+- Stop automatically updating config file. Add fix-hotkeys flag, feedback for missing hotkeys [`#333`](https://github.com/beyondmarks-ai/Wrapper/issues/333)
+- Update installation.md: Add x-cmd method to install wrapper [`#371`](https://github.com/beyondmarks-ai/Wrapper/issues/333)
+- Added option to change default editor [`#396`](https://github.com/beyondmarks-ai/Wrapper/pull/396)
+- Support Shell access but cant read history [`#127`](https://github.com/beyondmarks-ai/Wrapper/issues/127)
+- shortcut to copy path to currently selected file [`#196`](https://github.com/beyondmarks-ai/Wrapper/issues/196)
+
+#### Bug fix
+
+- fixed typo in hotkeys.toml [`#341`](https://github.com/beyondmarks-ai/Wrapper/issues/341)
+- Fixes issue #360 + Typo fixes by [`#379`](https://github.com/beyondmarks-ai/Wrapper/pull/379)
+- fixed spelling mistake : varibale to variable [`#394`](https://github.com/beyondmarks-ai/Wrapper/pull/394)
+- fixed exiftool session left open after use [`#400`](https://github.com/beyondmarks-ai/Wrapper/pull/400)
+- Show unsupported format in preview panel over a torrent file [`#408`](https://github.com/beyondmarks-ai/Wrapper/pull/408)
+- Vim bindings in docs cause error on nixos [`#325`](https://github.com/beyondmarks-ai/Wrapper/issues/325)
+- fix wrap help flag error [`#368`](https://github.com/beyondmarks-ai/Wrapper/issues/368)
+- You cannot access the disks section in the side panel when only have one disk [`#409`](https://github.com/beyondmarks-ai/Wrapper/issues/409)
+- "Unsupported formats" message has an extra space for .pdf files [`#392`](https://github.com/beyondmarks-ai/Wrapper/issues/392)
+
+# [**v1.1.4**](https://github.com/beyondmarks-ai/Wrapper/releases/tag/v1.1.4)
+
+> 2024-08-01
+
+#### Update
+
+- Added option to change default directory [`#211`](https://github.com/beyondmarks-ai/Wrapper/issues/211)
+- Added quotes around dir in lastdir to support special characters [`#218`](https://github.com/beyondmarks-ai/Wrapper/pull/218)
+- Make Hotkey settings unlimited [`423a96a`](https://github.com/beyondmarks-ai/Wrapper/commit/423a96a0aeca4ea2c30447d8b4010868045bb7e8)
+- Selection should start on currently positioned/pointed item [`#226`](https://github.com/beyondmarks-ai/Wrapper/issues/226)
+- Make Nerdfont optional [`#6`](https://github.com/beyondmarks-ai/Wrapper/issues/6)
+- Confirm before quit [`#155`](https://github.com/beyondmarks-ai/Wrapper/issues/155)
+- Added file permissions to metadata [`#279`](https://github.com/beyondmarks-ai/Wrapper/pull/279)
+- Better fuzzy file search [`#115`](https://github.com/beyondmarks-ai/Wrapper/issues/115)
+- MD5 checksum in Metadata [`#255`](https://github.com/beyondmarks-ai/Wrapper/pull/225)
+- An option to display the filesize in decimal or binary sizes [`#220`](https://github.com/beyondmarks-ai/Wrapper/issues/220)
+
+#### Bug fix
+
+- An option to display the filesize in decimal or binary sizes [`#220`](https://github.com/beyondmarks-ai/Wrapper/issues/220)
+- Fix Transparent Background issue [`#76`](https://github.com/beyondmarks-ai/Wrapper/issues/76)
+- Big text file makes the program freeze for a while [`#255`](https://github.com/beyondmarks-ai/Wrapper/issues/255)
+- Text in file preview has a background color behind it when using transparency [`#76`](https://github.com/beyondmarks-ai/Wrapper/issues/76)
+
+# [**v1.1.3**](https://github.com/beyondmarks-ai/Wrapper/releases/tag/v1.1.3)
+
+> 2024-05-26
+
+#### Update
+
+- Update print path list [`37c8864`](https://github.com/beyondmarks-ai/Wrapper/commit/37c8864eb2b0dc73fbf8928dd40b3b7573e9a11dw)
+- Make theme files embed [`0f53a12`](https://github.com/beyondmarks-ai/Wrapper/commit/7fa775dd7db175fef694e514bd77ebd75c801fae)
+- Disable update check via config [`#131`](https://github.com/beyondmarks-ai/Wrapper/issues/131)
+- Redesign hotkeys [`#116`](https://github.com/beyondmarks-ai/Wrapper/issues/116)
+- Create file or folder using same hotkey [`#116`](https://github.com/beyondmarks-ai/Wrapper/issues/116)
+- More dynamic footer height adaptive [`66a3fb4`](https://github.com/beyondmarks-ai/Wrapper/commit/66a3fb4feba31ead2224938b1a18a431a55ac9cc)
+- Confirm delete files [``]()
+- Support windows for get well known directories [`d4db820`](https://github.com/beyondmarks-ai/Wrapper/commit/d4db820ba839603df209dcce05468902739f301f)
+- Support text file preview [`#26`](https://github.com/beyondmarks-ai/Wrapper/issues/26)
+- Support directory preview [`#26`](https://github.com/beyondmarks-ai/Wrapper/issues/26)
+- Improve mouse scrolling delay [`f734292`](https://github.com/beyondmarks-ai/Wrapper/commit/f7342921d49d87f1bc633c9f8e19fe6845fbbf26)
+- Support image preview with ansi [`#26`](https://github.com/beyondmarks-ai/Wrapper/issues/26)
+- Clear search after opening directory [`#146`](https://github.com/beyondmarks-ai/Wrapper/issues/146)
+
+#### Bug fix
+
+- Recursive symlink crashes wrapper [`#109`](https://github.com/beyondmarks-ai/Wrapper/issues/109)
+- Timemachine snapshots listed in Disks section [`#126`](https://github.com/beyondmarks-ai/Wrapper/issues/126)
+- There will be a bug in the layout under a specific terminal height [`#105`](https://github.com/beyondmarks-ai/Wrapper/issues/105)
+- Fix lag when there are a lot of files [`#124`](https://github.com/beyondmarks-ai/Wrapper/issues/124)
+- Rendering will be blocked while executing a task that uses a progress bar [`#104`](https://github.com/beyondmarks-ai/Wrapper/issues/104)
+
+# [**v1.1.2**](https://github.com/beyondmarks-ai/Wrapper/releases/tag/v1.1.2)
+
+> 2024-05-08
+
+#### Update
+
+- Update help menu [`#75`](https://github.com/beyondmarks-ai/Wrapper/issues/75)
+- Update all modal, make other panel still show on background [`#79`](https://github.com/beyondmarks-ai/Wrapper/pull/79)
+- Support extract gz tar file [`b9aed84`](https://github.com/beyondmarks-ai/Wrapper/commit/b9aed847804421e1fc4f03dcaefb0e27f1260ea3)
+- Support transparent background [`4108d40`](https://github.com/beyondmarks-ai/Wrapper/commit/4108d40bc0b93656eca2da98253a83dbc0cb27a9)
+- Support custom border style [`6ff0576`](https://github.com/beyondmarks-ai/Wrapper/commit/6ff05765823cbd25e6fdc4d3f7370e435114acbb)
+- Enhancement when cutting and pasting, the file should be moved instead of copied and deleted. [`#100`](https://github.com/beyondmarks-ai/Wrapper/issues/100)
+- Support extract almost compression formats [`e57cb78`](https://github.com/beyondmarks-ai/Wrapper/commit/e57cb78d602d62b47662e2069b75059d908147db)
+- Update XDG_CACHE to XDG_STATE_HOME [`#90`](https://github.com/beyondmarks-ai/Wrapper/issues/90)
+
+#### Bug fix
+
+- Fix Cut -> Paste file causes go panic [`#77`](https://github.com/beyondmarks-ai/Wrapper/issues/77)
+- Fix symlinked folders don't open within wrapper [`#88`](https://github.com/beyondmarks-ai/Wrapper/issues/88)
+
+# [**v1.1.1**](https://github.com/beyondmarks-ai/Wrapper/releases/tag/v1.1.1)
+
+> 2024-04-23
+
+#### Update
+
+- Open directory with default application [`#33`](https://github.com/beyondmarks-ai/Wrapper/issues/33)
+- Auto update config file if missing config [`1498c92`](https://github.com/beyondmarks-ai/Wrapper/commit/1498c92d2166c8c25989be9ce5a15dc6d1ffb073)
+
+#### Bug fix
+
+- key `l` deletes files in macOS [`#72`](https://github.com/beyondmarks-ai/Wrapper/issues/72)
+
+# [**v1.1.0**](https://github.com/beyondmarks-ai/Wrapper/releases/tag/v1.1.0)
+
+> 2024-04-20
+
+#### Update
+
+- Update data folder from `$XDG_CONFIG_HOME/wrapper/data` to `$XDG_DATA_HOME/wrapper` [`9fff97a`](https://github.com/beyondmarks-ai/Wrapper/commit/9fff97a362bcd5bec1c19709b7a5aeb59cdeaa34)
+- Toggle dot file display [`9fff97a`](https://github.com/beyondmarks-ai/Wrapper/commit/9fff97a362bcd5bec1c19709b7a5aeb59cdeaa34/9fff97a362bcd5bec1c19709b7a5aeb59cdeaa34)
+- Update log file from `$XDG_CONFIG_HOME/wrapper/data/wrapper.log` to `$XDG_CACHE_DATA` [`#27`](https://github.com/beyondmarks-ai/Wrapper/pull/27)
+- Update theme background [`#42`](https://github.com/beyondmarks-ai/Wrapper/pull/42)
+- Update unzip function [`#55`](https://github.com/beyondmarks-ai/Wrapper/pull/55)
+- Update zip function [`60c490a`](https://github.com/beyondmarks-ai/Wrapper/commit/60c490aa06019fb1a5382b1e241c6b0a72ec51a4)
+- Update all config file from `json` to `toml` format file [`a018128`](https://github.com/beyondmarks-ai/Wrapper/commit/a018128ffd431d76a06f379fffbe0aa20d3e78cc)
+- Update search bar [`#61`](https://github.com/beyondmarks-ai/Wrapper/pull/61)
+- Update theme config format [`#66`](https://github.com/beyondmarks-ai/Wrapper/pull/66)
+- Update metadata to plugins [`c1f942d`](https://github.com/beyondmarks-ai/Wrapper/commit/c1f942da366919f114b094ce512ff95002b6a08c)
+
+#### Bug fix
+
+- Fix interface lag when selecting zip files or large files [`#29`](https://github.com/beyondmarks-ai/Wrapper/issues/29)
+- Fix external media error [`#46`](https://github.com/beyondmarks-ai/Wrapper/pull/46)
+- Fix can't find trash can folder [`396674f`](https://github.com/beyondmarks-ai/Wrapper/commit/396674f33e302369790bcb88d84df0d3830d3543)
+- Fix Crashes when truncating metadata [`#50`](https://github.com/beyondmarks-ai/Wrapper/issues/50)
+
+# [**v1.0.1**](https://github.com/beyondmarks-ai/Wrapper/releases/tag/v1.0.1)
+
+> 2024-04-08
+
+#### Update
+
+- Update `$HOME/.wrapper` to `$XDG_CONFIG_HOME/wrapper` [`886dbfb`](https://github.com/beyondmarks-ai/Wrapper/commit/886dbfb276407db36e9fb7369ec31053e7aabcf4)
+- Follow [The FreeDesktop.org Trash specification](https://specifications.freedesktop.org/trash-spec/trashspec-1.0.html) to update the trash bin path in local path [`886dbfb`](https://github.com/beyondmarks-ai/Wrapper/commit/886dbfb276407db36e9fb7369ec31053e7aabcf4)
+- The external hard drive will be deleted directly ,But macOS for now not support trash can[`a4232a8`](https://github.com/beyondmarks-ai/Wrapper/commit/a4232a88bef4b5c3e99456fd198eabb953dc324c)
+- The user can enter the path, which will be the path of the first file panel [`14620b3`](https://github.com/beyondmarks-ai/Wrapper/commit/14620b33b09edfce80a95e1f52f7f66b3686a9d0)
+- Make user can open file with default browser text-editor etc [`f47d291`](https://github.com/beyondmarks-ai/Wrapper/commit/f47d2915bf637da0cf99a4b15fa0bea8edc8d380)
+- Can open terminal in focused file panel path [`f47d291`](https://github.com/beyondmarks-ai/Wrapper/commit/f47d2915bf637da0cf99a4b15fa0bea8edc8d380)
+
+#### Bug fix
+
+- Fix processes bar cursor index display error [`f6eb9d8`](https://github.com/beyondmarks-ai/Wrapper/commit/f6eb9d879f9f7ef31859e3f84c8792e2f0fc543a)
+- Fix [Crash when selecting a broken symlink](https://github.com/beyondmarks-ai/Wrapper/issues/9) [`e89722b`](https://github.com/beyondmarks-ai/Wrapper/commit/e89722b3717cc669c2e14bb310d1b96c1727b63f)
+
+# [**v1.0.0**](https://github.com/beyondmarks-ai/Wrapper/releases/tag/v1.0.0)
+
+> 2024-04-06
+
+##### Update
+
+- Auto download folder [`96a3a71`](https://github.com/beyondmarks-ai/Wrapper/commit/96a3a7108eb7c4327bad3424ed55e472ec78049f)
+- Auto initialize configuration [`96a3a71`](https://github.com/beyondmarks-ai/Wrapper/commit/96a3a7108eb7c4327bad3424ed55e472ec78049f)
+- Add version sub-command [`ee22df3`](https://github.com/beyondmarks-ai/Wrapper/commit/ee22df3c7700adddb859ada8623f6c8b038e8087)
+
+##### Bug fix
+
+- Fix creating an Item when the file panel has no Item will cause an error [`9ee1d86`](https://github.com/beyondmarks-ai/Wrapper/commit/9ee1d860192182803d408c5046ca9f5255121698)
+- Fix delete mupulate Item will cause cursor error [`ee22df3`](https://github.com/beyondmarks-ai/Wrapper/commit/ee22df3c7700adddb859ada8623f6c8b038e8087)
+
+# [**Beta 0.1.0**](https://github.com/beyondmarks-ai/Wrapper/releases/tag/v0.1.0-beta)
+
+> 2024-04-06
+
+- FIRST RELEASE COME UP! NO ANY CHANGE

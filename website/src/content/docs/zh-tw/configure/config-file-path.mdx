@@ -1,0 +1,75 @@
+---
+title: 設定檔路徑
+description: 所有 wrapper 設定檔路徑
+head:
+  - tag: title
+    content: 設定檔路徑 | wrapper
+---
+
+:::tip
+
+如果你想取得目前設定的路徑，可以試試 `wrap pl`，它會印出所有 wrapper 檔案位置。
+
+:::
+
+## 目錄
+
+#### 設定目錄
+
+|         Linux         |                   macOS                   |          Windows           |
+| :-------------------: | :---------------------------------------: | :------------------------: |
+| `~/.config/wrapper` | `~/Library/Application Support/wrapper` | `%LOCALAPPDATA%/wrapper` |
+
+#### 主題目錄
+
+|            Linux            |                      macOS                      |             Windows              |
+| :-------------------------: | :---------------------------------------------: | :------------------------------: |
+| `~/.config/wrapper/theme` | `~/Library/Application Support/wrapper/theme` | `%LOCALAPPDATA%/wrapper/theme` |
+
+#### 資料目錄
+
+|           Linux            |                   macOS                    |          Windows           |
+| :------------------------: | :----------------------------------------: | :------------------------: |
+| `~/.local/share/wrapper` | `~/Library/Application Support/wrapper/` | `%LOCALAPPDATA%/wrapper` |
+
+### 變更設定檔路徑
+
+你可以使用 `-c` 或 `--config-file` flag，為 `config.toml` 檔案指定不同路徑：
+
+```bash
+wrap -c /path/to/your/config.toml
+```
+
+你可以使用 `--hotkey-file` flag，為 `hotkey.toml` 檔案指定不同路徑：
+
+```bash
+wrap --hotkey-file /path/to/your/hotkey.toml
+```
+
+#### 日誌目錄
+
+|           Linux            |                   macOS                   |          Windows           |
+| :------------------------: | :---------------------------------------: | :------------------------: |
+| `~/.local/state/wrapper` | `~/Library/Application Support/wrapper` | `%LOCALAPPDATA%/wrapper` |
+
+---
+
+## 所有設定檔路徑
+
+#### Config
+
+|               Linux               |                         macOS                         |                Windows                 |
+| :-------------------------------: | :---------------------------------------------------: | :------------------------------------: |
+| `~/.config/wrapper/config.toml` | `~/Library/Application Support/wrapper/config.toml` | `%LOCALAPPDATA%/wrapper/config.toml` |
+
+#### Hotkeys
+
+|               Linux                |                         macOS                          |                 Windows                 |
+| :--------------------------------: | :----------------------------------------------------: | :-------------------------------------: |
+| `~/.config/wrapper/hotkeys.toml` | `~/Library/Application Support/wrapper/hotkeys.toml` | `%LOCALAPPDATA%/wrapper/hotkeys.toml` |
+
+#### 日誌檔
+
+|                  Linux                   |                          macOS                          |                 Windows                  |
+| :--------------------------------------: | :-----------------------------------------------------: | :--------------------------------------: |
+| `~/.local/state/wrapper/wrapper.log` | `~/Library/Application Support/wrapper/wrapper.log` | `%LOCALAPPDATA%/wrapper/wrapper.log` |
