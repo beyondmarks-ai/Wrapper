@@ -1,0 +1,11 @@
+**
+!go.mod
+!go.sum
+!backend/
+!backend/**
+!src/
+!src/pkg/
+!src/pkg/remote/
+!src/pkg/remote/**
+!src/pkg/securestore/
+!src/pkg/securestore/**

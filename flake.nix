@@ -1,0 +1,75 @@
+{
+  description = "A fancy, pretty terminal file manager";
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+
+    flake-utils.url = "github:numtide/flake-utils";
+
+    flake-compat.url = "github:edolstra/flake-compat";
+    flake-compat.flake = false;
+
+    gomod2nix.url = "github:nix-community/gomod2nix";
+    gomod2nix.inputs.nixpkgs.follows = "nixpkgs";
+    gomod2nix.inputs.flake-utils.follows = "flake-utils";
+  };
+
+  outputs = inputs @ {...}:
+    inputs.flake-utils.lib.eachDefaultSystem
+    (
+      system: let
+        overlays = [
+          inputs.gomod2nix.overlays.default
+        ];
+        pkgs = import inputs.nixpkgs {
+          inherit system overlays;
+        };
+      in rec {
+        packages = rec {
+          wrapper = pkgs.buildGoApplication {
+            pname = "wrapper";
+            version = "1.6.0";
+            src = ./.;
+            modules = ./gomod2nix.toml;
+
+            # Temporary workaround: zoxide-related tests fail in the Nix sandbox.
+            # CI still runs build, test, fmt, and lint outside the flake build.
+            doCheck = false;
+
+            nativeCheckInputs = with pkgs; [
+              zoxide
+              exiftool
+              writableTmpDirAsHomeHook
+            ];
+          };
+
+          default = wrapper;
+        };
+
+        apps = rec {
+          wrapper = {
+            type = "app";
+            program = "${packages.wrapper}/bin/wrapper";
+          };
+          default = wrapper;
+        };
+
+        devShells = {
+          default = pkgs.mkShell {
+            packages = with pkgs; [
+              ## golang
+              delve
+              go-outline
+              go
+              golangci-lint
+              gopkgs
+              gopls
+              gotools
+              nix
+              gomod2nix
+              nixpkgs-fmt
+            ];
+          };
+        };
+      }
+    );
+}
