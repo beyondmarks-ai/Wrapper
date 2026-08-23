@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"log/slog"
+	"net"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -480,7 +481,9 @@ func (a *Agent) sendEncryptedEvent(ctx context.Context, target, kind string, val
 	if err != nil {
 		return err
 	}
-	now := time.Now().UTC()
+	// Firestore timestamps have microsecond precision. Sign the canonical value
+	// that will survive storage so receivers verify the same envelope bytes.
+	now := time.Now().UTC().Truncate(time.Microsecond)
 	event := remote.Envelope{
 		Version: remote.ProtocolVersion, ID: uuid.NewString(), Kind: kind,
 		SourceDevice: a.config.Device.ID, TargetDevice: target, Ciphertext: ciphertext,
@@ -624,5 +627,9 @@ func (a *Agent) Progress() []Progress {
 }
 func isTransient(err error) bool {
 	var apiError *remoteclient.APIError
-	return !errors.As(err, &apiError) || apiError.Status >= 500 || apiError.Status == http.StatusTooManyRequests
+	if errors.As(err, &apiError) {
+		return apiError.Status >= 500 || apiError.Status == http.StatusTooManyRequests
+	}
+	var networkError net.Error
+	return errors.As(err, &networkError) && (networkError.Timeout() || networkError.Temporary())
 }

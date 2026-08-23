@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"net/http"
 	"os"
 	"path/filepath"
 	"testing"
@@ -13,6 +14,7 @@ import (
 
 	"github.com/beyondmarks-ai/Wrapper/src/pkg/everything"
 	"github.com/beyondmarks-ai/Wrapper/src/pkg/remote"
+	"github.com/beyondmarks-ai/Wrapper/src/pkg/remoteclient"
 )
 
 type fakeSearcher struct{ results []everything.Result }
@@ -126,8 +128,23 @@ func TestEncryptedEventLifetimeLeavesClockSkewMargin(t *testing.T) {
 	require.NoError(t, instance.refreshDevices(context.Background()))
 	require.NoError(t, instance.sendEncryptedEvent(context.Background(), target.ID, "search.request", remote.SearchRequest{}))
 	require.Len(t, cloud.sent, 1)
-	require.Equal(t, eventTTL, cloud.sent[0].ExpiresAt.Sub(cloud.sent[0].CreatedAt))
+	event := cloud.sent[0]
+	require.Equal(t, eventTTL, event.ExpiresAt.Sub(event.CreatedAt))
 	require.Less(t, eventTTL, 5*time.Minute)
+	require.Zero(t, event.CreatedAt.Nanosecond()%int(time.Microsecond))
+	require.Zero(t, event.ExpiresAt.Nanosecond()%int(time.Microsecond))
+
+	// Firestore truncates timestamps to microseconds. The stored envelope must
+	// still verify after that round trip.
+	event.CreatedAt = event.CreatedAt.Truncate(time.Microsecond)
+	event.ExpiresAt = event.ExpiresAt.Truncate(time.Microsecond)
+	require.NoError(t, remote.VerifyEnvelope(event, source.SigningKey))
+}
+
+func TestCryptographicEventFailuresAreNotRetriedForever(t *testing.T) {
+	require.False(t, isTransient(remote.ErrInvalidSignature))
+	require.True(t, isTransient(&remoteclient.APIError{Status: http.StatusServiceUnavailable}))
+	require.False(t, isTransient(&remoteclient.APIError{Status: http.StatusBadRequest}))
 }
 func TestExplicitSendCanUseUnsharedPathButRemoteRequestCannot(t *testing.T) {
 	sourceIdentity, err := remote.NewIdentity()
