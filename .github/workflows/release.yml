@@ -35,15 +35,21 @@ jobs:
           WRAPPER_GOOGLE_CLIENT_ID: ${{ vars.WRAPPER_GOOGLE_CLIENT_ID }}
           WRAPPER_FIREBASE_API_KEY: ${{ vars.WRAPPER_FIREBASE_API_KEY }}
         run: .\scripts\package.ps1 -EverythingDll "$env:EVERYTHING_DLL"
+      - name: Generate installer checksum
+        shell: pwsh
+        run: |
+          $installer = Resolve-Path 'dist\Wrapper-Setup-x64.exe'
+          $hash = (Get-FileHash -LiteralPath $installer -Algorithm SHA256).Hash
+          "$hash  Wrapper-Setup-x64.exe" | Out-File 'dist\SHA256SUMS.txt' -Encoding ascii
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: Wrapper-Windows-x64
           path: |
             dist/Wrapper-Setup-x64.exe
-            bin/SHA256SUMS.txt
+            dist/SHA256SUMS.txt
       - uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
             dist/Wrapper-Setup-x64.exe
-            bin/SHA256SUMS.txt
+            dist/SHA256SUMS.txt
