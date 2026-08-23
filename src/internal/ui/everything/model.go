@@ -143,6 +143,7 @@ func (m *Model) transferAction() common.ModelAction {
 	if len(paths) == 0 {
 		paths = []string{m.results[m.cursor].Path}
 	}
+	m.monitoringTransfer = true
 	return common.RemoteTransferAction{DeviceID: device.ID, Paths: paths}
 }
 

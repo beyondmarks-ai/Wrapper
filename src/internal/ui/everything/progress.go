@@ -40,6 +40,7 @@ func (msg TransferProgressMsg) Apply(m *Model) tea.Cmd {
 				continue
 			}
 			m.completedTransfers[item.TransferID] = struct{}{}
+			m.monitoringTransfer = false
 			completed := TransferCompletedMsg{TransferID: item.TransferID, Destination: item.Destination}
 			completion = func() tea.Msg { return completed }
 			break
@@ -47,6 +48,12 @@ func (msg TransferProgressMsg) Apply(m *Model) tea.Cmd {
 	}
 	m.progress = msg.progress
 	m.progressError = msg.err
+	if len(msg.progress) > 0 && msg.progress[len(msg.progress)-1].Stage == remote.TransferFailed {
+		m.monitoringTransfer = false
+	}
+	if !m.open && !m.monitoringTransfer {
+		return completion
+	}
 	return tea.Batch(completion, m.loadProgressAfter(time.Second))
 }
 

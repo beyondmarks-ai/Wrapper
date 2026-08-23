@@ -57,7 +57,6 @@ func (m *model) Init() tea.Cmd {
 	return tea.Batch(
 		textinput.Blink, // Assuming textinput.Blink is a valid command
 		processCmdToTeaCmd(m.processBarModel.GetListenCmd()),
-		m.everythingModal.StartProgressMonitor(),
 	)
 }
 

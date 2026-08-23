@@ -62,6 +62,7 @@ func (m *model) remoteTransferCmd(action common.ModelAction) tea.Cmd {
 
 func (m *model) applyRemoteTransferResult(msg remoteTransferResultMsg) {
 	if msg.err != nil {
+		m.everythingModal.CancelTransferMonitoring()
 		m.notifyModel = notify.New(true, "Transfer could not start", msg.err.Error(), notify.NoAction)
 		return
 	}

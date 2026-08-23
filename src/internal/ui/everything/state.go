@@ -20,12 +20,10 @@ func (m *Model) Open() tea.Cmd {
 	m.selected = make(map[string]struct{})
 	m.textInput.SetValue("")
 	_ = m.textInput.Focus()
-	return m.loadDevicesCmd()
+	return tea.Batch(m.loadDevicesCmd(), m.loadProgressCmd())
 }
 
-// StartProgressMonitor keeps transfer status and completion notifications alive
-// even when the Everything search modal is closed.
-func (m *Model) StartProgressMonitor() tea.Cmd { return m.loadProgressCmd() }
+func (m *Model) CancelTransferMonitoring() { m.monitoringTransfer = false }
 
 func (m *Model) Close() {
 	m.open = false

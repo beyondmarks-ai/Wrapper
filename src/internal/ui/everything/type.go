@@ -28,6 +28,7 @@ type Model struct {
 	progressError       error
 	progressInitialized bool
 	completedTransfers  map[string]struct{}
+	monitoringTransfer  bool
 
 	open        bool
 	justOpened  bool

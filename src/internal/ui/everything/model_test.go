@@ -221,6 +221,7 @@ func TestRemoteDeviceSearchAndTransferSelection(t *testing.T) {
 	require.Equal(t, "laptop", transfer.DeviceID)
 	require.Equal(t, []string{`D:\\Shared\\report.pdf`}, transfer.Paths)
 	require.True(t, m.IsOpen(), "search stays open so transfer progress remains visible")
+	require.True(t, m.monitoringTransfer, "transfer polling remains active if the search modal is closed")
 }
 
 func TestTransferProgressRendersBytesAndEmitsCompletionOnce(t *testing.T) {
@@ -241,6 +242,7 @@ func TestTransferProgressRendersBytesAndEmitsCompletionOnce(t *testing.T) {
 	require.Contains(t, progress, "█")
 	require.Contains(t, progress, "░")
 
+	m.monitoringTransfer = true
 	completed := TransferProgressMsg{progress: []agent.Progress{{
 		TransferID: "new", Stage: remote.TransferCompleted, Done: 1024, Total: 1024,
 		Destination: "C:\\Users\\Demo\\Downloads\\Wrapper",
@@ -250,6 +252,7 @@ func TestTransferProgressRendersBytesAndEmitsCompletionOnce(t *testing.T) {
 	completion, ok := cmd().(TransferCompletedMsg)
 	require.True(t, ok)
 	require.Equal(t, "C:\\Users\\Demo\\Downloads\\Wrapper", completion.Destination)
+	require.False(t, m.monitoringTransfer, "completion stops background polling after a closed modal")
 	require.Nil(t, completed.Apply(&m), "the same completed transfer must not notify twice")
 	require.Contains(t, strings.Join(m.progressLines(), "\n"), "Saved to:")
 }
