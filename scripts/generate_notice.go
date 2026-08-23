@@ -59,6 +59,17 @@ func main() {
 		}
 		output.WriteString(strings.TrimRight(sections[name], "\n"))
 	}
+	upstreamLicense, err := os.ReadFile("third_party/Superfile-LICENSE.txt")
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "read Superfile upstream license: %v\n", err)
+		os.Exit(1)
+	}
+	output.WriteString("\n\n## Superfile upstream portions\n\n")
+	output.WriteString("- Components: portions of the original terminal file manager code\n")
+	output.WriteString("- Source: https://github.com/yorukot/superfile\n\n```text\n")
+	output.Write(bytes.TrimSpace(upstreamLicense))
+	output.WriteString("\n```\n")
+
 	everythingLicense, err := os.ReadFile("third_party/Everything-LICENSE.txt")
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "read Everything SDK license: %v\n", err)

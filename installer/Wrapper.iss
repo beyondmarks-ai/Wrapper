@@ -1,5 +1,5 @@
 #define MyAppName "Wrapper"
-#define MyAppVersion "1.7.2"
+#define MyAppVersion "1.8.0"
 #define MyAppPublisher "Beyond Marks"
 #define MyAppExeName "wrap.exe"
 
@@ -8,6 +8,14 @@ AppId={{D0A27051-7D9B-4AC3-B429-9DBA137701D1}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 AppPublisher={#MyAppPublisher}
+AppPublisherURL=https://github.com/beyondmarks-ai
+AppSupportURL=https://github.com/beyondmarks-ai/Wrapper/issues
+AppUpdatesURL=https://github.com/beyondmarks-ai/Wrapper/releases
+VersionInfoCompany={#MyAppPublisher}
+VersionInfoDescription=Wrapper - Modern Windows File Manager
+VersionInfoCopyright=Copyright (c) 2026 Beyond Marks
+VersionInfoProductName={#MyAppName}
+VersionInfoProductVersion={#MyAppVersion}
 DefaultDirName={autopf}\Wrapper
 DefaultGroupName=Wrapper
 PrivilegesRequired=admin
