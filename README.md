@@ -1,125 +1,252 @@
 # Wrapper
 
 <div align="center">
-  <img src="asset/readme/wrapper-preview.png" alt="Wrapper terminal file manager" width="100%">
+  <img src="docs/images/wrapper-welcome.svg" alt="Wrapper welcome screen with Beyond Marks branding" width="100%">
 
-  <strong>Beyond Marks presents a fast, keyboard-first Windows file manager.</strong>
+  <h3>Find files instantly. Fetch them securely from another PC.</h3>
+
+  <p>A keyboard-first Windows file manager by <strong>Beyond Marks</strong>, powered by Everything search and end-to-end encrypted device transfers.</p>
+
+  <p>
+    <a href="https://github.com/beyondmarks-ai/Wrapper/releases/latest"><img alt="Latest release" src="https://img.shields.io/github/v/release/beyondmarks-ai/Wrapper?style=flat-square&color=39d353"></a>
+    <img alt="Windows 10 and 11" src="https://img.shields.io/badge/Windows-10%20%7C%2011-39d353?style=flat-square&logo=windows&logoColor=white">
+    <a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/License-MIT-39d353?style=flat-square"></a>
+  </p>
+
+  <p><strong><a href="https://github.com/beyondmarks-ai/Wrapper/releases/latest/download/Wrapper-Setup-x64.exe">Download Wrapper for Windows</a></strong></p>
 </div>
 
-Wrapper combines terminal file management, instant Everything search, and end-to-end encrypted transfers between your paired Windows PCs. The cloud coordinates devices and stores temporary ciphertext; it cannot read searched paths, filenames, manifests, or file contents.
+---
 
-## What works
+## Why Wrapper?
 
-- Instant local search through the live Everything index: all items, files only, or folders only.
-- Remote live search across explicitly shared folders on paired, online PCs.
-- `Ctrl+T` transfer of the focused item or current multi-selection.
-- Resumable 8 MiB uploads and resumed downloads, with SHA-256 verification.
-- Encrypted files and folders up to 20 GiB, automatically deleted after 24 hours; beta accounts are limited to 100 transfers and 50 GiB per rolling day.
-- Google/Firebase sign-in, short-lived pairing codes, explicit source confirmation, device revocation, and DPAPI-protected local credentials.
-- Responsive terminal UI, previews, metadata, archives, clipboard operations, panels, and themes.
+| Capability | What it gives you |
+|---|---|
+| Instant local search | Search the live Everything index in milliseconds and filter by all items, files, or folders. |
+| Search another PC | View indexed results from explicitly shared folders on a paired, online Windows PC. |
+| Fetch only what you need | Mark one or more remote results and press <kbd>Ctrl</kbd>+<kbd>T</kbd>; Wrapper transfers only those items. |
+| Visible progress | See the real stage, percentage, downloaded bytes, and destination while a transfer runs. |
+| Private transfers | Files and manifests are encrypted on the source PC before upload and decrypted only on the destination PC. |
+| Full file manager | Keyboard navigation, multiple panels, previews, metadata, archives, clipboard operations, themes, and more. |
 
-## Requirements
+## Product tour
 
-- Windows 10 or 11 x64.
-- The Windows installer includes Everything 1.4, enables its service and startup, and includes `Everything64.dll`. Source builds require the DLL from the official [Everything SDK](https://www.voidtools.com/support/everything/sdk/).
-- A configured Wrapper Cloud deployment for cross-PC features. Local file management and search do not require cloud access.
+### 1. Search this PC instantly
 
-## Install
+Press <kbd>Ctrl</kbd>+<kbd>G</kbd> and type a name. Wrapper queries the live Everything index instead of walking the disk.
 
-Run `Wrapper-Setup-x64.exe` once as administrator. It installs Wrapper, the signed Everything indexer, its automatic service, and the background components required for cross-PC search. No separate dependency installation is needed.
+<img src="docs/images/local-search.svg" alt="Wrapper instant local Everything search showing file and folder results" width="100%">
 
-## Build
+### 2. Search a paired PC
 
-```powershell
-git clone https://github.com/beyondmarks-ai/Wrapper.git
-cd Wrapper
-.\scripts\build.ps1
-.\bin\wrap.exe
-```
+Press <kbd>Shift</kbd>+<kbd>Tab</kbd> to switch devices, <kbd>Tab</kbd> to choose ALL, FILES, or FOLDERS, and <kbd>Space</kbd> to mark remote results.
 
-The build script tests the repository and produces both `bin/wrap.exe` and `bin/wrapper-agent.exe`. To make the all-in-one installer, which downloads and checksum-verifies the pinned official Everything MSI:
+<img src="docs/images/remote-search.svg" alt="Wrapper searching a paired PC with two files marked for transfer" width="100%">
 
-```powershell
-winget install JRSoftware.InnoSetup
-.\scripts\package.ps1 -EverythingDll C:\path\to\Everything64.dll
-```
+### 3. Follow the real download
 
-Cloud release values can be supplied through `WRAPPER_CLOUD_API_URL`, `WRAPPER_GOOGLE_CLIENT_ID`, and `WRAPPER_FIREBASE_API_KEY`. They are public desktop application configuration, not service credentials.
+After <kbd>Ctrl</kbd>+<kbd>T</kbd>, Wrapper shows the transfer stage, actual downloaded bytes, percentage, and destination. Monitoring continues even if the search window is closed.
+
+<img src="docs/images/transfer-progress.svg" alt="Wrapper encrypted transfer progress at 62 percent with byte counts and destination" width="100%">
+
+### 4. Know exactly where it was saved
+
+After decryption and integrity verification, Wrapper displays a completion popup with the destination folder.
+
+<img src="docs/images/download-complete.svg" alt="Wrapper download complete popup showing the verified destination folder" width="100%">
+
+## Install in one step
+
+### Requirements
+
+- Windows 10 or Windows 11, x64.
+- Internet access for sign-in, pairing, remote search, and transfers.
+- Both PCs must use the same Google account for cloud features.
+
+### Installation
+
+1. Download [Wrapper-Setup-x64.exe](https://github.com/beyondmarks-ai/Wrapper/releases/latest/download/Wrapper-Setup-x64.exe).
+2. Run it as administrator on both PCs.
+3. The installer adds Wrapper to PATH, installs Everything 1.4 with its indexing service, installs the Everything SDK DLL, and installs Wrapper Agent.
+4. Complete the Google sign-in window and register the PC when prompted.
+5. Start Wrapper from PowerShell or Windows Terminal:
+
+       wrap
+
+No separate runtime, Everything installation, SDK setup, or background-service setup is required.
 
 ## Connect two PCs
 
-Run on each PC:
+Do these steps once after installing Wrapper on both computers.
 
-```powershell
-wrap auth login
-wrap device register --name $env:COMPUTERNAME
-wrap share add C:\Users\you\Documents
-```
+### 1. Sign in and register each PC
 
-Registration installs and starts the per-user Wrapper Agent. Then pair:
+On both PCs:
 
-```powershell
-# PC A
-wrap device code
+    wrap auth login
+    wrap device register --name $env:COMPUTERNAME
+    wrap agent status
 
-# PC B
-wrap device pair ABCD-EFGH
+The default download destination is:
 
-# PC A, using the pairing ID printed on PC B
-wrap device confirm PAIRING_ID
-```
+    %USERPROFILE%\Downloads\Wrapper
 
-Inside Wrapper:
+### 2. Choose what remote devices may search
 
-- `Ctrl+G` opens Everything search.
-- `Tab` changes `ALL` / `FILES` / `FOLDERS`.
-- `Shift+Tab` changes `This PC` / paired PC.
-- `Space` marks remote search results.
-- `Ctrl+T` requests marked remote results or sends the focused local selection.
+On the PC that owns the files:
 
-Remote requests can only access configured shared roots. An explicit local `Ctrl+T` send can send the item you selected even when it is outside a shared root.
+    wrap share add C:\Users\you\Documents
+    wrap share list
 
-## Cloud deployment
+Remote search and remote-requested transfers cannot leave these shared roots.
 
-Production infrastructure is defined in `infra/`, the API is in `backend/`, and the guarded deployment script uses versioned remote Terraform state and keyless GitHub federation. Follow [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md). Security properties and limitations are in [docs/SECURITY.md](docs/SECURITY.md).
+### 3. Pair the devices
+
+On PC A, create a ten-minute code:
+
+    wrap device code
+
+On PC B, enter that code:
+
+    wrap device pair ABCD-EFGH
+
+PC B prints a pairing ID. Approve it on PC A:
+
+    wrap device confirm PAIRING_ID
+
+Verify the connection on either PC:
+
+    wrap device list
+
+## Search and transfer
+
+1. Run **wrap**.
+2. Press <kbd>Ctrl</kbd>+<kbd>G</kbd>.
+3. Press <kbd>Shift</kbd>+<kbd>Tab</kbd> until the other PC is selected.
+4. Type a file or folder name.
+5. Press <kbd>Space</kbd> to mark multiple results, or leave the cursor on one result.
+6. Press <kbd>Ctrl</kbd>+<kbd>T</kbd>.
+7. Dismiss the request confirmation and watch the progress bar.
+8. Wrapper decrypts, verifies, and saves the result under **Downloads\Wrapper**, then displays its location.
+
+### Search shortcuts
+
+| Shortcut | Action |
+|---|---|
+| <kbd>Ctrl</kbd>+<kbd>G</kbd> | Open Everything Global Search |
+| <kbd>Tab</kbd> | Change ALL / FILES / FOLDERS |
+| <kbd>Shift</kbd>+<kbd>Tab</kbd> | Change This PC / paired PC |
+| <kbd>↑</kbd> / <kbd>↓</kbd> | Move through results |
+| <kbd>Space</kbd> | Mark or unmark a remote result |
+| <kbd>Enter</kbd> | Open a local result or mark a remote result |
+| <kbd>Ctrl</kbd>+<kbd>T</kbd> | Request marked remote results or send a local selection |
+| <kbd>Esc</kbd> | Close the search window |
+
+## How transfers work
+
+    wrap.exe
+       │  per-user named pipe
+       ▼
+    wrapper-agent.exe
+       │
+       ├── local Everything IPC ──► instant indexed search
+       │
+       └── signed HTTPS + Firebase authentication
+                              │
+                              ▼
+                       Cloud Run API
+                         │         │
+                  Firestore     private GCS
+                   metadata      ciphertext
+                                      │
+                           automatic deletion after 24h
+
+The source PC creates a compressed archive, encrypts it with the destination device's age X25519 public key, and uploads ciphertext through a resumable session. The destination resumes interrupted downloads, decrypts into a staging directory, rejects unsafe archive entries, verifies the manifest and SHA-256 hashes, and then moves the verified files into place. Name conflicts use keep-both instead of silent overwrite.
+
+## Security model
+
+- Remote search is limited to folders explicitly added with **wrap share add**.
+- Search requests, search results, paths, manifests, archives, and file contents are end-to-end encrypted between paired devices.
+- Device events are signed; local credentials and device identity are protected with Windows DPAPI.
+- Cloud Storage receives ciphertext only. Transfer objects are scheduled for deletion after 24 hours, with a bucket lifecycle safety net.
+- Transfers are capped at 20 GiB. Beta accounts are limited to 100 transfers and 50 GiB of ciphertext per rolling 24 hours.
+- The service can see account/device identifiers, timestamps, transfer state, encrypted sizes, and normal network metadata.
+
+Read the complete threat model in [docs/SECURITY.md](docs/SECURITY.md).
 
 ## Useful commands
 
-```powershell
-wrap auth status
-wrap device list
-wrap share list
-wrap transfer list
-wrap agent status
-wrap agent stop
-wrap agent start
-```
+| Command | Purpose |
+|---|---|
+| **wrap auth status** | Show the signed-in account |
+| **wrap device list** | List registered and paired devices |
+| **wrap share list** | List remotely searchable roots |
+| **wrap transfer list** | Inspect cloud transfer state |
+| **wrap agent status** | Check the background agent |
+| **wrap agent stop** | Stop the background agent |
+| **wrap agent start** | Start the background agent |
+| **wrap device revoke DEVICE_ID** | Revoke a lost or retired PC |
 
-## Architecture
+## Troubleshooting
 
-```text
-wrap.exe  -- per-user named pipe -->  wrapper-agent.exe
-   |                                      |
-   | local Everything IPC                 | signed HTTPS + Firebase ID token
-   v                                      v
-Everything index                    Cloud Run control API
-                                          |
-                         Firestore metadata + private GCS ciphertext
-```
+### The paired PC does not appear
 
-The named pipe is restricted to the current Windows SID and SYSTEM. Cloud requests are signed by the device in addition to Firebase authentication. Transfer payloads use age X25519 encryption before upload.
+Run **wrap device list** on both PCs and confirm Wrapper Agent is running:
+
+    wrap agent status
+    wrap agent start
+
+Both computers must be online, paired, signed into the same account, and running the current Wrapper version.
+
+### Remote search times out
+
+On the remote PC:
+
+    wrap agent stop
+    wrap agent start
+
+Also confirm Everything is running and that the requested folder is listed by **wrap share list**.
+
+### A folder is missing from remote results
+
+Add its parent or the folder itself on the PC that owns it:
+
+    wrap share add D:\Shared
+
+### Where was my download saved?
+
+The default location is **%USERPROFILE%\Downloads\Wrapper**. Wrapper v1.8.0 also shows the destination during progress and in the completion popup.
+
+## Build from source
+
+Source builds require Go, and local Everything search on Windows requires **Everything64.dll** from the official [Everything SDK](https://www.voidtools.com/support/everything/sdk/).
+
+    git clone https://github.com/beyondmarks-ai/Wrapper.git
+    cd Wrapper
+    .\scripts\build.ps1 -EverythingDll C:\path\to\Everything64.dll
+    .\bin\wrap.exe
+
+Create the all-in-one installer:
+
+    winget install JRSoftware.InnoSetup
+    .\scripts\package.ps1 -EverythingDll C:\path\to\Everything64.dll
+
+The build script runs the test suite and produces **bin\wrap.exe** and **bin\wrapper-agent.exe**. The package script checksum-verifies the pinned official Everything MSI before bundling it.
+
+For production cloud deployment, follow [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md). Infrastructure lives in **infra/** and the control API lives in **backend/**.
 
 ## Development checks
 
-```powershell
-go mod tidy
-gofmt -w .
-go test ./...
-.\scripts\build.ps1 -SkipTests
-terraform -chdir=infra fmt -check -recursive
-terraform -chdir=infra validate
-```
+    go mod tidy
+    gofmt -w .
+    go test ./...
+    go vet ./...
+    .\scripts\build.ps1 -SkipTests
+    terraform -chdir=infra fmt -check -recursive
+    terraform -chdir=infra validate
 
-## License
+## Ownership and license
 
-Wrapper is licensed under [MIT](LICENSE). Third-party notices are retained in [NOTICE.md](NOTICE.md).
+Wrapper is maintained and distributed by **Beyond Marks** under the [MIT License](LICENSE).
+
+Required licenses for upstream and bundled components are retained in [NOTICE.md](NOTICE.md). Those notices satisfy redistribution requirements and do not indicate ownership of the Wrapper product.

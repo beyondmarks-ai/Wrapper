@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Instant local Everything search</title><desc id="desc">Wrapper searching the local Everything index for project files and folders.</desc>
+  <style>text{font-family:"Cascadia Mono",Consolas,monospace}.green{fill:#68f27f;font-weight:700}.muted{fill:#a7b2a8}.dim{fill:#607064}.title{fill:#c2cec4;font-weight:700}</style>
+  <rect width="1200" height="675" fill="#030603"/><rect x="24" y="24" width="1152" height="627" rx="13" fill="#071007" stroke="#286f36" stroke-width="2"/><rect x="24" y="24" width="1152" height="52" rx="13" fill="#0b170c"/><path d="M24 76h1152" stroke="#286f36"/>
+  <circle cx="52" cy="50" r="7" fill="#39d353"/><circle cx="76" cy="50" r="7" fill="#226b31"/><circle cx="100" cy="50" r="7" fill="#173f20"/><text x="128" y="56" font-size="18" class="muted">Wrapper · Beyond Marks</text><text x="1080" y="56" font-size="16" class="dim">v1.8.0</text>
+  <text x="60" y="112" font-size="22" class="title">◇ Everything Global Search</text><text x="60" y="150" font-size="17" class="muted">Search on:</text><text x="178" y="150" font-size="17" class="green">THIS PC</text><text x="430" y="150" font-size="16" class="dim">Shift+Tab changes PC</text>
+  <text x="60" y="183" font-size="17" class="muted">Mode:</text><text x="130" y="183" font-size="17" class="green">ALL</text><text x="430" y="183" font-size="16" class="dim">Tab changes type</text>
+  <rect x="52" y="202" width="1096" height="48" rx="5" fill="#050a05" stroke="#286f36"/><text x="72" y="233" font-size="18" class="green">&gt; project_</text><path d="M52 270h1096" stroke="#1b4925"/>
+  <text x="70" y="312" font-size="17" class="green">&gt; [ ] DIR  | C:\Work\Project</text><text x="70" y="349" font-size="17" class="muted">  [ ] FILE | C:\Work\Project\Dashboard.go</text>
+  <text x="70" y="386" font-size="17" class="muted">  [ ] FILE | C:\Work\Project\README.md</text><text x="70" y="423" font-size="17" class="muted">  [ ] DIR  | D:\Archive\Project Assets</text><text x="70" y="460" font-size="17" class="muted">  [ ] FILE | C:\Docs\Project-plan.pdf</text>
+  <text x="70" y="510" font-size="15" class="dim">5 indexed results · completed in 0.013s</text><path d="M52 596h1096" stroke="#1b4925"/><text x="60" y="625" font-size="15" class="dim">Tab type  |  Shift+Tab PC  |  Up/Down select  |  Enter open  |  Esc close</text>
+</svg>

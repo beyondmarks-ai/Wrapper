@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Wrapper welcome screen</title>
+  <desc id="desc">Wrapper terminal file manager welcome screen by Beyond Marks.</desc>
+  <style>
+    text{font-family:"Cascadia Mono",Consolas,monospace}.green{fill:#68f27f;font-weight:700}.muted{fill:#a7b2a8}.dim{fill:#607064}.brand{fill:#68f27f;font-weight:700;letter-spacing:10px}
+  </style>
+  <rect width="1200" height="675" fill="#030603"/><rect x="24" y="24" width="1152" height="627" rx="13" fill="#071007" stroke="#286f36" stroke-width="2"/>
+  <rect x="24" y="24" width="1152" height="52" rx="13" fill="#0b170c"/><path d="M24 76h1152" stroke="#286f36"/>
+  <circle cx="52" cy="50" r="7" fill="#39d353"/><circle cx="76" cy="50" r="7" fill="#226b31"/><circle cx="100" cy="50" r="7" fill="#173f20"/>
+  <text x="128" y="56" font-size="18" class="muted">Wrapper · Beyond Marks</text><text x="1080" y="56" font-size="16" class="dim">v1.8.0</text>
+  <text x="349" y="132" font-size="22" class="green">B E Y O N D   M A R K S   P R E S E N T S</text>
+  <text x="172" y="280" font-size="112" class="brand">WRAPPER</text><path d="M275 320h650" stroke="#286f36"/>
+  <text x="367" y="366" font-size="22" class="green">SEARCH · ORGANIZE · CONNECT</text>
+  <rect x="326" y="420" width="548" height="98" rx="7" fill="#050a05" stroke="#286f36"/>
+  <text x="360" y="460" font-size="17" class="muted">Fast local search. Secure cross-PC transfers.</text><text x="457" y="496" font-size="17" class="green">[ ENTER ] Continue</text>
+  <path d="M52 596h1096" stroke="#1b4925"/><text x="60" y="625" font-size="15" class="dim">WRAPPER v1.8.0  |  READY  |  BUILT FOR WINDOWS</text>
+</svg>
