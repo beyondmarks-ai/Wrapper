@@ -57,6 +57,7 @@ func (m *model) Init() tea.Cmd {
 	return tea.Batch(
 		textinput.Blink, // Assuming textinput.Blink is a valid command
 		processCmdToTeaCmd(m.processBarModel.GetListenCmd()),
+		m.everythingModal.StartProgressMonitor(),
 	)
 }
 
@@ -75,6 +76,7 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	var sidebarCmd, inputCmd, updateCmd, panelCmd,
 		metadataCmd, filePreviewCmd, helpMenuCmd, resizeCmd tea.Cmd
+	var notifyConsumedKey bool
 
 	// These are above the key message handing to prevent issues with firstKeyInput
 	// if someone presses `/` to focus to searchBar, searchBar will otherwise
@@ -89,6 +91,7 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.MouseMsg:
 		m.handleMouseMsg(msg)
 	case tea.KeyPressMsg:
+		notifyConsumedKey = m.notifyModel.IsOpen()
 		inputCmd = m.handleKeyInput(msg)
 
 	// Has to handle zoxide messages separately as they could be generated via
@@ -106,6 +109,8 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		updateCmd = msg.Apply(&m.everythingModal)
 	case everythingui.TransferProgressMsg:
 		updateCmd = msg.Apply(&m.everythingModal)
+	case everythingui.TransferCompletedMsg:
+		m.applyTransferCompleted(msg)
 	case remoteTransferResultMsg:
 		m.applyRemoteTransferResult(msg)
 
@@ -121,8 +126,11 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		slog.Debug("Message of type that is not explicitly handled")
 	}
 
-	// This is needed for blink, etc to work
-	panelCmd = m.updateComponentState(msg)
+	// This is needed for blink, etc to work. Do not pass a dismissal key
+	// through to the modal beneath a notification.
+	if !notifyConsumedKey {
+		panelCmd = m.updateComponentState(msg)
+	}
 
 	m.updateModelStateAfterMsg()
 	filePreviewCmd = m.fileModel.GetFilePreviewCmd(false)
@@ -326,13 +334,13 @@ func (m *model) handleKeyInput(msg tea.KeyPressMsg) tea.Cmd {
 		// updateFilePanelState
 		// TODO: Convert that to async via tea.Cmd
 	case m.zoxideModal.IsOpen():
-	case m.everythingModal.IsOpen():
-		// Ignore keypress. It will be handled in Update call via
-		// updateFilePanelState
 
 	// Handles all warn models except the warn model for confirming to quit
 	case m.notifyModel.IsOpen():
 		cmd = m.notifyModelOpenKey(msg.String())
+	case m.everythingModal.IsOpen():
+		// Ignore keypress. It will be handled in Update call via
+		// updateFilePanelState
 
 	// If renaming a object
 	case m.fileModel.Renaming:
@@ -404,6 +412,8 @@ func (m *model) updateComponentState(msg tea.Msg) tea.Cmd {
 	case m.zoxideModal.IsOpen():
 		action, cmd = m.zoxideModal.HandleUpdate(msg)
 		cmd = tea.Batch(cmd, m.applyZoxideModalAction(action))
+	case m.notifyModel.IsOpen():
+		// Notification owns input while displayed above another modal.
 	case m.everythingModal.IsOpen():
 		action, cmd = m.everythingModal.HandleUpdate(msg)
 		cmd = tea.Batch(cmd, m.applyEverythingModalAction(action))
@@ -599,6 +609,12 @@ func (m *model) updateRenderForOverlay(finalRender string) string {
 		return stringfunction.PlaceOverlay(overlayX, overlayY, zoxideModal, finalRender)
 	}
 
+	if m.notifyModel.IsOpen() {
+		notifyModal := m.notifyModel.Render()
+		overlayX := m.fullWidth/common.CenterDivisor - common.ModalWidth/common.CenterDivisor
+		overlayY := m.fullHeight/common.CenterDivisor - common.ModalHeight/common.CenterDivisor
+		return stringfunction.PlaceOverlay(overlayX, overlayY, notifyModal, finalRender)
+	}
 	if m.everythingModal.IsOpen() {
 		everythingModal := m.everythingModal.Render()
 		overlayX := m.fullWidth/common.CenterDivisor - m.everythingModal.GetWidth()/common.CenterDivisor
@@ -625,13 +641,6 @@ func (m *model) updateRenderForOverlay(finalRender string) string {
 		overlayX := m.fullWidth/common.CenterDivisor - common.ModalWidth/common.CenterDivisor
 		overlayY := m.fullHeight/common.CenterDivisor - common.ModalHeight/common.CenterDivisor
 		return stringfunction.PlaceOverlay(overlayX, overlayY, typingModal, finalRender)
-	}
-
-	if m.notifyModel.IsOpen() {
-		notifyModal := m.notifyModel.Render()
-		overlayX := m.fullWidth/common.CenterDivisor - common.ModalWidth/common.CenterDivisor
-		overlayY := m.fullHeight/common.CenterDivisor - common.ModalHeight/common.CenterDivisor
-		return stringfunction.PlaceOverlay(overlayX, overlayY, notifyModal, finalRender)
 	}
 
 	return finalRender

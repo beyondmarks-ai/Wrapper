@@ -19,8 +19,10 @@ func selectedResultStyle() lipgloss.Style {
 func (m *Model) Render() string {
 	r := ui.ZoxideRenderer(m.maxHeight, m.width)
 	r.SetBorderTitle(m.headline)
-	if status := m.progressLine(); status != "" {
-		r.AddLines(selectedResultStyle().Render(status))
+	if status := m.progressLines(); len(status) > 0 {
+		for _, line := range status {
+			r.AddLines(selectedResultStyle().Render(common.TruncateText(line, max(m.width-2, 1), "...")))
+		}
 		r.AddSection()
 	}
 

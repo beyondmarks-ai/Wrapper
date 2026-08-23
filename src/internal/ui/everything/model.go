@@ -32,6 +32,7 @@ func NewModelWithRemote(maxHeight, width int, searcher everythingapi.Searcher, s
 		headline: icon.Search + icon.Space + everythingHeadlineText, searcher: searcher,
 		startupError: startupErr, remoteClient: remoteClient, textInput: common.GeneratePromptTextInput(),
 		results: []everythingapi.Result{}, selected: make(map[string]struct{}),
+		completedTransfers: make(map[string]struct{}),
 	}
 	m.textInput.Prompt = ""
 	m.SetMaxHeight(maxHeight)
@@ -59,11 +60,7 @@ func (m *Model) HandleUpdate(msg tea.Msg) (common.ModelAction, tea.Cmd) {
 			}
 			return common.NoAction{}, nil
 		case key.String() == "ctrl+t" || slices.Contains(common.Hotkeys.TransferItems, key.String()):
-			action := m.transferAction()
-			if _, empty := action.(common.NoAction); !empty {
-				m.Close()
-			}
-			return action, nil
+			return m.transferAction(), nil
 		case key.String() == " " || key.String() == "space":
 			m.toggleSelected()
 			return common.NoAction{}, nil

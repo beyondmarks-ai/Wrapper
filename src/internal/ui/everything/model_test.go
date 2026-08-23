@@ -3,6 +3,7 @@ package everything
 import (
 	"context"
 	"errors"
+	"strings"
 	"testing"
 
 	tea "charm.land/bubbletea/v2"
@@ -219,8 +220,39 @@ func TestRemoteDeviceSearchAndTransferSelection(t *testing.T) {
 	require.True(t, ok)
 	require.Equal(t, "laptop", transfer.DeviceID)
 	require.Equal(t, []string{`D:\\Shared\\report.pdf`}, transfer.Paths)
+	require.True(t, m.IsOpen(), "search stays open so transfer progress remains visible")
 }
 
+func TestTransferProgressRendersBytesAndEmitsCompletionOnce(t *testing.T) {
+	m := NewModelWithRemote(20, 80, &fakeSearcher{}, nil, nil)
+	baseline := TransferProgressMsg{progress: []agent.Progress{{
+		TransferID: "old", Stage: remote.TransferCompleted, Done: 1024, Total: 1024,
+	}}}
+	require.Nil(t, baseline.Apply(&m), "existing completed transfers are only used as the notification baseline")
+
+	downloading := TransferProgressMsg{progress: []agent.Progress{{
+		TransferID: "new", Stage: remote.TransferDownloading, Done: 512, Total: 1024,
+		Destination: "C:\\Users\\Demo\\Downloads\\Wrapper",
+	}}}
+	require.Nil(t, downloading.Apply(&m))
+	progress := strings.Join(m.progressLines(), "\n")
+	require.Contains(t, progress, "50%")
+	require.Contains(t, progress, "512 B / 1.0 KiB")
+	require.Contains(t, progress, "█")
+	require.Contains(t, progress, "░")
+
+	completed := TransferProgressMsg{progress: []agent.Progress{{
+		TransferID: "new", Stage: remote.TransferCompleted, Done: 1024, Total: 1024,
+		Destination: "C:\\Users\\Demo\\Downloads\\Wrapper",
+	}}}
+	cmd := completed.Apply(&m)
+	require.NotNil(t, cmd)
+	completion, ok := cmd().(TransferCompletedMsg)
+	require.True(t, ok)
+	require.Equal(t, "C:\\Users\\Demo\\Downloads\\Wrapper", completion.Destination)
+	require.Nil(t, completed.Apply(&m), "the same completed transfer must not notify twice")
+	require.Contains(t, strings.Join(m.progressLines(), "\n"), "Saved to:")
+}
 func TestSendPickerReturnsSelectedDevice(t *testing.T) {
 	remoteClient := &fakeRemoteClient{devices: []remote.Device{{ID: "desktop", Name: "Desktop"}}}
 	m := NewModelWithRemote(20, 100, &fakeSearcher{}, nil, remoteClient)

@@ -8,6 +8,7 @@ import (
 	tea "charm.land/bubbletea/v2"
 
 	"github.com/beyondmarks-ai/Wrapper/src/internal/common"
+	everythingui "github.com/beyondmarks-ai/Wrapper/src/internal/ui/everything"
 	"github.com/beyondmarks-ai/Wrapper/src/internal/ui/notify"
 	"github.com/beyondmarks-ai/Wrapper/src/pkg/localagent"
 )
@@ -71,4 +72,13 @@ func (m *model) applyRemoteTransferResult(msg remoteTransferResultMsg) {
 		content = fmt.Sprintf("Job %s is encrypting and uploading in the background.", msg.id)
 	}
 	m.notifyModel = notify.New(true, title, content, notify.NoAction)
+}
+
+func (m *model) applyTransferCompleted(msg everythingui.TransferCompletedMsg) {
+	location := msg.Destination
+	if location == "" {
+		location = "your configured Wrapper download folder"
+	}
+	content := fmt.Sprintf("The file or folder was downloaded and verified.\n\nSaved to: %s", location)
+	m.notifyModel = notify.New(true, "Download complete", content, notify.NoAction)
 }

@@ -15,17 +15,19 @@ import (
 )
 
 type Model struct {
-	headline      string
-	searcher      everythingapi.Searcher
-	startupError  error
-	remoteClient  RemoteClient
-	devices       []remote.Device
-	deviceError   error
-	deviceIndex   int
-	sendPaths     []string
-	selected      map[string]struct{}
-	progress      []agent.Progress
-	progressError error
+	headline            string
+	searcher            everythingapi.Searcher
+	startupError        error
+	remoteClient        RemoteClient
+	devices             []remote.Device
+	deviceError         error
+	deviceIndex         int
+	sendPaths           []string
+	selected            map[string]struct{}
+	progress            []agent.Progress
+	progressError       error
+	progressInitialized bool
+	completedTransfers  map[string]struct{}
 
 	open        bool
 	justOpened  bool

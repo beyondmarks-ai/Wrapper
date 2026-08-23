@@ -22,13 +22,14 @@ import (
 )
 
 type Progress struct {
-	TransferID string
-	Stage      remote.TransferState
-	Done       int64
-	Total      int64
-	Err        error     `json:"-"`
-	Error      string    `json:"error,omitempty"`
-	UpdatedAt  time.Time `json:"updatedAt"`
+	TransferID  string
+	Stage       remote.TransferState
+	Done        int64
+	Total       int64
+	Destination string    `json:"destination,omitempty"`
+	Err         error     `json:"-"`
+	Error       string    `json:"error,omitempty"`
+	UpdatedAt   time.Time `json:"updatedAt"`
 }
 
 type Config struct {
@@ -350,7 +351,7 @@ func (a *Agent) prepareAndUpload(ctx context.Context, target string, paths []str
 		if err == nil || transfer.ID == "" {
 			return
 		}
-		a.report(Progress{TransferID: transfer.ID, Stage: remote.TransferFailed, Err: err})
+		a.report(Progress{TransferID: transfer.ID, Stage: remote.TransferFailed, Destination: destination, Err: err})
 		updateCtx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		defer cancel()
 		_, _ = a.config.Client.UpdateTransfer(updateCtx, transfer.ID, remote.TransferFailed, transfer.CiphertextSize, transfer.EncryptedManifest, "transfer_failed")
@@ -410,11 +411,15 @@ func (a *Agent) download(ctx context.Context, ready remote.TransferReady) (err e
 	if err != nil {
 		return err
 	}
+	destination := ready.DestinationPath
+	if destination == "" {
+		destination = a.config.DownloadDir
+	}
 	defer func() {
 		if err == nil {
 			return
 		}
-		a.report(Progress{TransferID: transfer.ID, Stage: remote.TransferFailed, Err: err})
+		a.report(Progress{TransferID: transfer.ID, Stage: remote.TransferFailed, Destination: destination, Err: err})
 		updateCtx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		defer cancel()
 		_, _ = a.config.Client.UpdateTransfer(updateCtx, transfer.ID, remote.TransferFailed, transfer.CiphertextSize, transfer.EncryptedManifest, "transfer_failed")
@@ -432,7 +437,7 @@ func (a *Agent) download(ctx context.Context, ready remote.TransferReady) (err e
 	defer os.Remove(tempPath) //nolint:errcheck
 	if err = remoteclient.DownloadResumable(ctx, a.config.HTTPClient, url, tempPath, transfer.CiphertextSize,
 		func(done, total int64) {
-			a.report(Progress{TransferID: transfer.ID, Stage: remote.TransferDownloading, Done: done, Total: total})
+			a.report(Progress{TransferID: transfer.ID, Stage: remote.TransferDownloading, Done: done, Total: total, Destination: destination})
 		}); err != nil {
 		return err
 	}
@@ -440,7 +445,7 @@ func (a *Agent) download(ctx context.Context, ready remote.TransferReady) (err e
 		transfer.CiphertextSize, transfer.EncryptedManifest, ""); err != nil {
 		return err
 	}
-	a.report(Progress{TransferID: transfer.ID, Stage: remote.TransferVerifying})
+	a.report(Progress{TransferID: transfer.ID, Stage: remote.TransferVerifying, Done: transfer.CiphertextSize, Total: transfer.CiphertextSize, Destination: destination})
 	var manifest remote.Manifest
 	if err = a.config.Identity.DecryptJSON(transfer.EncryptedManifest, &manifest); err != nil {
 		return err
@@ -451,10 +456,6 @@ func (a *Agent) download(ctx context.Context, ready remote.TransferReady) (err e
 	payload, err := os.Open(tempPath)
 	if err != nil {
 		return err
-	}
-	destination := ready.DestinationPath
-	if destination == "" {
-		destination = a.config.DownloadDir
 	}
 	err = remote.ExtractEncryptedPayload(ctx, a.config.Identity, payload, destination, manifest, remote.ConflictKeepBoth)
 	closeErr := payload.Close()
@@ -467,7 +468,7 @@ func (a *Agent) download(ctx context.Context, ready remote.TransferReady) (err e
 	_, err = a.config.Client.UpdateTransfer(ctx, transfer.ID, remote.TransferCompleted,
 		transfer.CiphertextSize, transfer.EncryptedManifest, "")
 	if err == nil {
-		a.report(Progress{TransferID: transfer.ID, Stage: remote.TransferCompleted, Done: transfer.CiphertextSize, Total: transfer.CiphertextSize})
+		a.report(Progress{TransferID: transfer.ID, Stage: remote.TransferCompleted, Done: transfer.CiphertextSize, Total: transfer.CiphertextSize, Destination: destination})
 	}
 	return err
 }
